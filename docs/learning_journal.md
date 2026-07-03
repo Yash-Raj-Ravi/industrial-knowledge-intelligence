@@ -60,3 +60,44 @@ Uploading and processing documents are two separate responsibilities. The upload
 ## Next Goal
 Implement a document parsing service starting with PDF text extraction and design the parser architecture so additional document formats can be integrated easily.
 
+# Day 3
+
+## Completed
+- Implemented PDF document parsing using PyMuPDF
+- Created `pdf_parser.py` for PDF text extraction
+- Implemented page-by-page text extraction
+- Ignored blank pages during parsing
+- Created `parser_factory.py` for selecting parsers based on file extension
+- Implemented dictionary-based parser registration
+- Created `document_service.py` to coordinate document parsing
+- Added POST `/parse` endpoint
+- Added request validation using a Pydantic model (`ParseRequest`)
+- Added file extension normalization for case-insensitive parser selection
+- Implemented HTTP error handling for unsupported file types, missing files, and unexpected parsing errors
+- Added character count to the parsing response
+- Successfully tested PDF parsing using Swagger UI
+
+## Concepts Learned
+- PyMuPDF (`fitz`)
+- PDF document object
+- Page-by-page text extraction
+- `page.get_text("text")`
+- Context managers (`with`)
+- `str.strip()`
+- `"\n".join()`
+- Factory Pattern
+- Service Layer architecture
+- Separation of concerns
+- Function references in Python
+- Dictionary-based dispatch
+- `os.path.splitext()`
+- `os.path.basename()`
+- Pydantic request models (`BaseModel`)
+- Exception handling (`try-except`)
+- HTTP status codes (400, 404, 500)
+
+## Biggest Learning
+A clean backend architecture separates responsibilities across different layers. The API layer should handle HTTP communication, the service layer should coordinate the workflow, the factory should decide which parser to use, and each parser should focus only on extracting data from its specific document format. This modular design makes the application easier to maintain and extend with new document types.
+
+## Next Goal
+Extend the parsing pipeline by implementing parsers for additional document formats such as DOCX, PPTX, XLSX, CSV, and TXT while reusing the existing service and factory architecture.

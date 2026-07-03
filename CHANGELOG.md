@@ -40,3 +40,27 @@ All notable changes to this project will be documented in this file.
 ### Project Status
 - Multi-format document ingestion service completed.
 - Ready to implement document parsing and text extraction pipeline.
+
+---
+
+## [0.3.0] - Day 3 (3 July 2026)
+
+### Added
+- Implemented PDF document parser using PyMuPDF.
+- Created a dedicated PDF parsing module (`pdf_parser.py`).
+- Implemented a parser factory (`parser_factory.py`) for selecting parsers based on file extension.
+- Created a document service layer (`document_service.py`) to orchestrate document parsing.
+- Added the `POST /parse` API endpoint for extracting text from uploaded documents.
+- Added request validation using a Pydantic model (`ParseRequest`).
+- Added exception handling for unsupported file types, missing files, and unexpected parsing errors.
+- Added case-insensitive file extension handling for parser selection.
+- Added character count to the parsing API response.
+
+### Changed
+- Adopted a layered architecture by separating API, service, factory, and parser responsibilities.
+- Improved project modularity to simplify future support for additional document formats.
+
+### Project Status
+- PDF text extraction pipeline completed.
+- Clean and extensible document parsing architecture established.
+- Ready to implement parsers for DOCX, PPTX, XLSX, CSV, TXT, and OCR support.
