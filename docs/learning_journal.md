@@ -101,3 +101,45 @@ A clean backend architecture separates responsibilities across different layers.
 
 ## Next Goal
 Extend the parsing pipeline by implementing parsers for additional document formats such as DOCX, PPTX, XLSX, CSV, and TXT while reusing the existing service and factory architecture.
+
+# Day 4
+
+## Completed
+- Implemented TXT document parser (`txt_parser.py`)
+- Implemented CSV document parser (`csv_parser.py`)
+- Implemented DOCX document parser using `python-docx`
+- Implemented PPTX document parser using `python-pptx`
+- Implemented XLSX document parser using `openpyxl`
+- Extracted text from Word document paragraphs
+- Extracted text from PowerPoint slides and text shapes
+- Extracted text from Excel worksheets row by row
+- Converted CSV rows and Excel rows into plain text format
+- Ignored blank paragraphs, slides, and rows during parsing
+- Registered all document parsers in `parser_factory.py`
+- Added type hints using `Callable` for parser functions
+- Successfully tested parsing for PDF, TXT, CSV, DOCX, PPTX, and XLSX using Swagger UI
+
+## Concepts Learned
+- `python-docx`
+- `python-pptx`
+- `openpyxl`
+- `Document()`
+- `Presentation()`
+- `load_workbook()`
+- `document.paragraphs`
+- `presentation.slides`
+- `slide.shapes`
+- `shape.has_text_frame`
+- `sheet.iter_rows(values_only=True)`
+- Generator expressions
+- `",".join()`
+- `Callable`
+- Multi-format document parsing
+- Open/Closed Principle (SOLID)
+- Extensible parser architecture
+
+## Biggest Learning
+A well-designed parser architecture allows new document formats to be added with minimal changes to the existing codebase. By following the Factory Pattern and keeping every parser responsible for only one document type, the same API endpoint and service layer can support multiple file formats without modification. This demonstrates how modular software design improves scalability, maintainability, and code reuse.
+
+## Next Goal
+Implement the text chunking pipeline to split extracted document text into manageable chunks, generate metadata, and prepare the parsed content for embeddings and Retrieval-Augmented Generation (RAG).

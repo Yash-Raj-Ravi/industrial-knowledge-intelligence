@@ -64,3 +64,30 @@ All notable changes to this project will be documented in this file.
 - PDF text extraction pipeline completed.
 - Clean and extensible document parsing architecture established.
 - Ready to implement parsers for DOCX, PPTX, XLSX, CSV, TXT, and OCR support.
+
+
+---
+
+## [0.4.0] - Day 4 (4 July 2026)
+
+### Added
+- Implemented TXT document parser (`txt_parser.py`).
+- Implemented CSV document parser (`csv_parser.py`).
+- Implemented DOCX document parser using `python-docx` (`docx_parser.py`).
+- Implemented PPTX document parser using `python-pptx` (`pptx_parser.py`).
+- Implemented XLSX document parser using `openpyxl` (`xlsx_parser.py`).
+- Registered all document parsers in the parser factory for automatic parser selection.
+- Added parser type hints using `Callable` for improved code readability and IDE support.
+
+### Changed
+- Extended the document parsing pipeline to support multiple document formats through the existing service and factory architecture.
+- Improved the parser factory to provide a single, extensible entry point for all supported document types without modifying the API or service layer.
+- Reused the existing `POST /parse` endpoint to process all supported document formats.
+
+### Tested
+- Successfully verified text extraction for PDF, TXT, CSV, DOCX, PPTX, and XLSX documents through Swagger UI.
+
+### Project Status
+- Multi-format document parsing pipeline completed.
+- Extensible parser architecture established for adding future document types with minimal code changes.
+- Ready to implement text chunking and document preprocessing for the RAG pipeline.
