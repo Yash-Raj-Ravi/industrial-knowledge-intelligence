@@ -91,3 +91,34 @@ All notable changes to this project will be documented in this file.
 - Multi-format document parsing pipeline completed.
 - Extensible parser architecture established for adding future document types with minimal code changes.
 - Ready to implement text chunking and document preprocessing for the RAG pipeline.
+
+## [0.5.0] - Day 5 (5 July 2026)
+
+### Added
+
+* Implemented `Chunk` data model using Pydantic to represent document chunks with metadata.
+* Implemented `TextChunker` class for reusable text chunking.
+* Added configurable character-based chunking with chunk size and overlap.
+* Added chunk metadata generation including `chunk_id`, `start_char`, `end_char`, `char_count`, and `word_count`.
+* Added validation for invalid chunk size and overlap configurations.
+* Implemented `ChunkService` to coordinate document parsing and text chunking.
+* Added `POST /chunk` API endpoint to generate chunks from supported document types.
+
+### Changed
+
+* Refactored `DocumentService` from a standalone function into a service class for improved modularity and consistency with the project architecture.
+* Separated document parsing and text chunking responsibilities into dedicated service and processing layers.
+* Configured the chunking pipeline to use centralized `CHUNK_SIZE` and `CHUNK_OVERLAP` values from the application configuration.
+* Improved code readability with stronger type hints and object-oriented design.
+
+### Tested
+
+* Successfully verified the chunking pipeline for PDF, TXT, CSV, DOCX, PPTX, and XLSX documents through Swagger UI.
+* Verified correct chunk metadata generation, configurable chunk size, overlap behavior, and total chunk count across supported document formats.
+
+### Project Status
+
+* Document ingestion pipeline completed through text chunking.
+* Modular service architecture established with `DocumentService`, `TextChunker`, and `ChunkService`.
+* Documents can now be uploaded, parsed, and converted into structured chunks ready for embedding generation.
+* Ready to implement embeddings, vector storage, and semantic retrieval for the RAG pipeline.

@@ -143,3 +143,43 @@ A well-designed parser architecture allows new document formats to be added with
 
 ## Next Goal
 Implement the text chunking pipeline to split extracted document text into manageable chunks, generate metadata, and prepare the parsed content for embeddings and Retrieval-Augmented Generation (RAG).
+
+# Day 5
+
+## Completed
+
+* Implemented `Chunk` data model using Pydantic to represent document chunks with metadata.
+* Implemented `TextChunker` class using a character-based sliding window algorithm.
+* Added configurable chunk size and chunk overlap through `config.py`.
+* Implemented chunk metadata generation including `chunk_id`, `start_char`, `end_char`, `char_count`, and `word_count`.
+* Added constructor validation for invalid chunk size and overlap configurations.
+* Refactored `DocumentService` from a standalone function into a service class.
+* Implemented `ChunkService` to coordinate document parsing and text chunking.
+* Added `POST /chunk` API endpoint for generating document chunks.
+* Successfully tested chunk generation for PDF, TXT, CSV, DOCX, PPTX, and XLSX documents using Swagger UI.
+
+## Concepts Learned
+
+* Text Chunking
+* Character-based Chunking
+* Sliding Window Algorithm
+* Chunk Overlap
+* Pydantic Models
+* Object-Oriented Programming (OOP)
+* Constructors (`__init__`)
+* Instance Attributes (`self`)
+* Service Layer Architecture
+* Separation of Concerns (SoC)
+* Single Responsibility Principle (SRP)
+* Dependency Injection
+* Metadata Generation
+* Defensive Programming
+* Pipeline Architecture
+
+## Biggest Learning
+
+A well-designed processing pipeline separates responsibilities into independent, reusable components. By isolating document parsing, text chunking, and service orchestration into dedicated classes, the system becomes easier to maintain, extend, and test. Using configurable chunk sizes and overlap through a sliding window algorithm ensures that document context is preserved while preparing high-quality chunks for embeddings and Retrieval-Augmented Generation (RAG).
+
+## Next Goal
+
+Implement the embedding generation pipeline by converting document chunks into vector embeddings, preparing them for storage in a vector database, and enabling semantic retrieval as the foundation of the RAG system.

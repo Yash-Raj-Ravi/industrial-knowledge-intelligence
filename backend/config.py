@@ -16,5 +16,8 @@ ALLOWED_TYPES = {"application/pdf",
 
                  "image/jpeg"
                  }
+# Chunking 
+CHUNK_SIZE = 500
+CHUNK_OVERLAP = 100
 
 

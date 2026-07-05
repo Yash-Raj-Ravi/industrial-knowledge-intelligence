@@ -3,15 +3,18 @@ import os
 import shutil
 from .config import ALLOWED_TYPES, UPLOAD_DIR
 from pydantic import BaseModel
-from .services.document_service import parse_document
+from .services.document_service import DocumentService
+from .services.chunk_service import ChunkService
 
 app = FastAPI(title="Industrial Knowledge Intelligence API",
 description="Backend API for Industrial Knowledge Intelligence Platform",
-version="0.2.0")
+version="0.5.0")
 
+document_service = DocumentService()
+chunk_service = ChunkService()
 os.makedirs(UPLOAD_DIR,exist_ok=True)
 
-class ParseRequest(BaseModel):
+class FilePathRequest(BaseModel):
     file_path: str
 @app.get("/")
 def home():
@@ -32,9 +35,9 @@ def upload_file(file: UploadFile = File(...)):
              "path":file_path}
 
 @app.post("/parse")
-def parse_document_endpoint(request: ParseRequest):
+def parse_document_endpoint(request: FilePathRequest):
     try:
-        text = parse_document(request.file_path)
+        text = document_service.parse_document(request.file_path)
 
         return {"message": "Document Parsed Successfully",
                 "file_path":request.file_path,
@@ -46,6 +49,22 @@ def parse_document_endpoint(request: ParseRequest):
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/chunk")
+def chunk_doc_endpoint(request: FilePathRequest):
+    try:
+        chunks = chunk_service.chunk_document(request.file_path)
+        return {"message": "Document Chunked Successfully",
+                "file_path":request.file_path,
+                "chunks":chunks,
+                "total_chunks":len(chunks)
+                }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
