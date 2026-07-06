@@ -5,13 +5,17 @@ from .config import ALLOWED_TYPES, UPLOAD_DIR
 from pydantic import BaseModel
 from .services.document_service import DocumentService
 from .services.chunk_service import ChunkService
+from .services.embedding_service import EmbeddingService
+from .models.embedding import EmbeddingResponse
 
 app = FastAPI(title="Industrial Knowledge Intelligence API",
 description="Backend API for Industrial Knowledge Intelligence Platform",
-version="0.5.0")
+version="0.6.0")
 
 document_service = DocumentService()
 chunk_service = ChunkService()
+embedding_service = EmbeddingService()
+
 os.makedirs(UPLOAD_DIR,exist_ok=True)
 
 class FilePathRequest(BaseModel):
@@ -69,4 +73,18 @@ def chunk_doc_endpoint(request: FilePathRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/embed",
+          response_model = EmbeddingResponse)
+def embed_endpoint(request: FilePathRequest):
+    try:
+        chunks = chunk_service.chunk_document(request.file_path)
+        embeddings = embedding_service.generate_embeddings(chunks)
 
+        return embeddings
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

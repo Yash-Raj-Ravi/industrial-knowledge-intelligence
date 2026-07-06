@@ -1,7 +1,7 @@
 from backend.services.document_service import DocumentService
 from backend.chunking.text_chunker import TextChunker
 from backend.config import CHUNK_SIZE,CHUNK_OVERLAP
-from backend.chunking.models import Chunk
+from backend.models.chunk import Chunk
 
 class ChunkService:
 

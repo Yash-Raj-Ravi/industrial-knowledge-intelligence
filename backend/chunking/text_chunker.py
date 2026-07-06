@@ -1,4 +1,4 @@
-from backend.chunking.models import Chunk
+from backend.models.chunk import Chunk
 
 # Use a class rather than a function since we will be reusing the same chunk size and overlap size values
 class TextChunker:

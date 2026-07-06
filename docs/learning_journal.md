@@ -183,3 +183,50 @@ A well-designed processing pipeline separates responsibilities into independent,
 ## Next Goal
 
 Implement the embedding generation pipeline by converting document chunks into vector embeddings, preparing them for storage in a vector database, and enabling semantic retrieval as the foundation of the RAG system.
+
+
+# Day 6
+
+## Completed
+
+* Implemented `EmbeddingModel` wrapper using LangChain's `OllamaEmbeddings` for local embedding generation.
+* Added configurable `EMBEDDING_MODEL` and `OLLAMA_BASE_URL` through `config.py`.
+* Implemented `embed_text()` and `embed_texts()` methods for single-query and batch embedding generation.
+* Implemented `ChunkEmbedding` Pydantic model to represent embedding vectors along with chunk metadata.
+* Implemented `EmbeddingResponse` Pydantic model to represent the embedding generation response.
+* Implemented `EmbeddingService` to coordinate document chunk embedding generation.
+* Added validation for empty chunk collections before generating embeddings.
+* Integrated LangChain with the locally hosted Ollama embedding model (`mxbai-embed-large`).
+* Added `POST /embed` API endpoint for generating embeddings from supported document types.
+* Successfully tested embedding generation for PDF, TXT, CSV, DOCX, PPTX, and XLSX documents using Swagger UI.
+* Successfully verified end-to-end communication between FastAPI, LangChain, and the local Ollama server.
+
+## Concepts Learned
+
+* Vector Embeddings
+* Semantic Embeddings
+* LangChain Embeddings
+* Ollama Local LLM Integration
+* Batch Embedding Generation
+* Embedding Dimensions
+* Pydantic Response Models
+* Service Layer Architecture
+* Separation of Concerns (SoC)
+* Single Responsibility Principle (SRP)
+* Dependency Injection
+* Batch Processing
+* List Comprehensions
+* `zip()` Function
+* Type Hinting (`list[str]`, `list[list[float]]`)
+* Defensive Programming
+* Clean API Design
+* Local AI Model Inference
+* End-to-End AI Processing Pipeline
+
+## Biggest Learning
+
+Generating embeddings is only a small part of building an AI application. The majority of the work lies in designing a clean, modular processing pipeline that separates responsibilities between services, models, and API endpoints. By isolating embedding generation into dedicated `EmbeddingModel` and `EmbeddingService` classes and integrating them with LangChain and Ollama, the application becomes easier to maintain, test, and extend. Batch embedding generation also improves efficiency by processing multiple document chunks in a single request while preserving a clean and scalable architecture for the future RAG pipeline.
+
+## Next Goal
+
+Implement vector database integration using ChromaDB by storing generated embeddings along with their chunk metadata, building a document indexing pipeline, and enabling semantic similarity search as the retrieval component of the Retrieval-Augmented Generation (RAG) system.

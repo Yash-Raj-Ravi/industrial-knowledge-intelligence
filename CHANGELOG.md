@@ -122,3 +122,39 @@ All notable changes to this project will be documented in this file.
 * Modular service architecture established with `DocumentService`, `TextChunker`, and `ChunkService`.
 * Documents can now be uploaded, parsed, and converted into structured chunks ready for embedding generation.
 * Ready to implement embeddings, vector storage, and semantic retrieval for the RAG pipeline.
+
+
+## [0.6.0] - Day 6 (6 July 2026)
+
+### Added
+
+* Implemented `EmbeddingModel` wrapper using LangChain's `OllamaEmbeddings` for local embedding generation.
+* Added configurable `EMBEDDING_MODEL` and `OLLAMA_BASE_URL` through `config.py`.
+* Implemented `embed_text()` and `embed_texts()` methods for single-query and batch embedding generation.
+* Implemented `ChunkEmbedding` Pydantic model to represent chunk embeddings with associated metadata.
+* Implemented `EmbeddingResponse` Pydantic model to represent embedding generation results.
+* Implemented `EmbeddingService` to coordinate batch embedding generation from document chunks.
+* Added validation for empty chunk collections before embedding generation.
+* Added `POST /embed` API endpoint to generate embeddings for supported document types using the local Ollama embedding model.
+
+### Changed
+
+* Refactored the project structure by moving the `Chunk` Pydantic model into the centralized `backend/models` package.
+* Extended the document processing pipeline from parsing and chunking to semantic embedding generation.
+* Improved code readability through clearer variable naming and stronger separation between embedding vectors and response models.
+* Optimized embedding dimension calculation by computing it once per embedding batch and reusing the value throughout the response.
+
+### Tested
+
+* Successfully verified local Ollama integration using the `mxbai-embed-large` embedding model.
+* Successfully generated embeddings for PDF, TXT, CSV, DOCX, PPTX, and XLSX documents through Swagger UI.
+* Verified correct embedding generation for every document chunk.
+* Verified embedding dimensions, chunk metadata preservation, and batch embedding generation.
+* Confirmed successful communication between FastAPI, LangChain, and the local Ollama server.
+
+### Project Status
+
+* Semantic embedding generation pipeline completed.
+* Modular AI backend architecture established with `DocumentService`, `ChunkService`, `EmbeddingService`, and `EmbeddingModel`.
+* Documents can now be uploaded, parsed, chunked, and converted into vector embeddings using a locally hosted embedding model.
+* Ready to integrate ChromaDB for vector storage, document indexing, semantic retrieval, and the complete Retrieval-Augmented Generation (RAG) pipeline.

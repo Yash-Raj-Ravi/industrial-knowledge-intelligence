@@ -20,4 +20,8 @@ ALLOWED_TYPES = {"application/pdf",
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 100
 
+# Embedding Configuration
+EMBEDDING_MODEL = "mxbai-embed-large:latest"
+OLLAMA_BASE_URL = "http://localhost:11434"
+
 
