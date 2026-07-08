@@ -1,11 +1,10 @@
 from pydantic import BaseModel
+from backend.models.chunk import Chunk
 
 class ChunkEmbedding(BaseModel):
-    chunk_id: int
+    chunk : Chunk
     embedding: list[float]
     dimension: int
-    char_count: int
-    word_count: int
 
 class EmbeddingResponse(BaseModel):
     total_chunks: int

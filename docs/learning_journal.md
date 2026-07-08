@@ -230,3 +230,53 @@ Generating embeddings is only a small part of building an AI application. The ma
 ## Next Goal
 
 Implement vector database integration using ChromaDB by storing generated embeddings along with their chunk metadata, building a document indexing pipeline, and enabling semantic similarity search as the retrieval component of the Retrieval-Augmented Generation (RAG) system.
+
+# Day 7
+
+## Completed
+
+* Installed and configured ChromaDB for persistent vector storage.
+* Added configurable `CHROMA_PATH` and `COLLECTION_NAME` through `config.py`.
+* Implemented `ChromaStore` to manage vector database operations.
+* Implemented `add_embeddings()` to store document chunks, embedding vectors, metadata, and unique UUID-based IDs in ChromaDB.
+* Implemented `similarity_search()` to retrieve semantically similar document chunks using query embeddings.
+* Implemented `reset_database()` utility for clearing and recreating the ChromaDB collection during development.
+* Refactored `ChunkEmbedding` to contain the complete `Chunk` model instead of duplicating chunk information.
+* Refactored `EmbeddingService` by renaming `generate_embeddings()` to `generate_chunk_embeddings()` for improved clarity.
+* Added `generate_query_embedding()` to `EmbeddingService` for generating embeddings from user queries.
+* Implemented `SearchRequest`, `ChunkMetadata`, `SearchResult`, and `SearchResponse` Pydantic models.
+* Implemented `SearchService` to coordinate query embedding generation, semantic retrieval, and API response construction.
+* Added `POST /search` API endpoint for semantic document retrieval.
+* Successfully indexed document embeddings into ChromaDB through FastAPI.
+* Successfully performed end-to-end semantic search using locally generated query embeddings.
+
+## Concepts Learned
+
+* ChromaDB
+* Persistent Vector Databases
+* Vector Indexing
+* Semantic Similarity Search
+* Query Embeddings
+* Document Indexing Pipeline
+* UUID Generation
+* ChromaDB Collections
+* Search Request & Response Design
+* API Response Transformation
+* Composition over Duplication
+* Dictionary Unpacking (`**kwargs`)
+* Data Transformation Layer
+* Law of Demeter (Least Knowledge Principle)
+* Service Layer Architecture
+* Separation of Concerns (SoC)
+* Single Responsibility Principle (SRP)
+* Clean API Design
+* Retrieval-Augmented Generation (RAG) Retrieval Pipeline
+* End-to-End Semantic Retrieval Pipeline
+
+## Biggest Learning
+
+Building a vector database is far more than simply storing embeddings. A clean retrieval pipeline requires separating indexing, embedding generation, vector storage, and semantic search into dedicated layers with clearly defined responsibilities. By introducing `ChromaStore` and `SearchService`, the backend now hides ChromaDB's internal implementation behind clean API models, making the system easier to maintain, extend, and replace in the future. Understanding how query embeddings, vector similarity search, and response transformation work together provided a much deeper understanding of how the retrieval component of a RAG system is built.
+
+## Next Goal
+
+Integrate a local LLM with the semantic retrieval pipeline by constructing prompts from the retrieved document chunks, generating context-aware responses using Ollama, and completing the Retrieval-Augmented Generation (RAG) workflow.

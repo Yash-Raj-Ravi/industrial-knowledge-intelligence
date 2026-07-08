@@ -1,6 +1,10 @@
 from fastapi import FastAPI,UploadFile,File,HTTPException
 import os
 import shutil
+
+from .models.search import SearchResponse, SearchRequest
+from .services.search_service import SearchService
+from .vectorstore.chroma_store import ChromaStore
 from .config import ALLOWED_TYPES, UPLOAD_DIR
 from pydantic import BaseModel
 from .services.document_service import DocumentService
@@ -10,11 +14,13 @@ from .models.embedding import EmbeddingResponse
 
 app = FastAPI(title="Industrial Knowledge Intelligence API",
 description="Backend API for Industrial Knowledge Intelligence Platform",
-version="0.6.0")
+version="0.7.0")
 
 document_service = DocumentService()
 chunk_service = ChunkService()
 embedding_service = EmbeddingService()
+store = ChromaStore()
+search_service = SearchService()
 
 os.makedirs(UPLOAD_DIR,exist_ok=True)
 
@@ -78,7 +84,9 @@ def chunk_doc_endpoint(request: FilePathRequest):
 def embed_endpoint(request: FilePathRequest):
     try:
         chunks = chunk_service.chunk_document(request.file_path)
-        embeddings = embedding_service.generate_embeddings(chunks)
+        embeddings = embedding_service.generate_chunk_embeddings(chunks)
+
+        store.add_embeddings(embeddings.embeddings)
 
         return embeddings
 
@@ -88,3 +96,14 @@ def embed_endpoint(request: FilePathRequest):
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/search", response_model = SearchResponse)
+def search_endpoint(request: SearchRequest):
+    try:
+        return search_service.search(request)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+

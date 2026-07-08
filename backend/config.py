@@ -24,4 +24,8 @@ CHUNK_OVERLAP = 100
 EMBEDDING_MODEL = "mxbai-embed-large:latest"
 OLLAMA_BASE_URL = "http://localhost:11434"
 
+# Vector database
+CHROMA_PATH = "./chroma_db"
+COLLECTION_NAME = "industrial_documents"
+
 
