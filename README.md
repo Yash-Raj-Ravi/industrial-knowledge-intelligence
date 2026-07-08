@@ -1,54 +1,199 @@
 # Industrial Knowledge Intelligence Platform
 
-An AI-powered platform for industrial document intelligence, knowledge retrieval, and operational decision support.
+An AI-powered platform for industrial document intelligence, semantic knowledge retrieval, and Retrieval-Augmented Generation (RAG) using locally hosted AI models.
+
+---
 
 ## Problem Statement
 
-Industrial organizations manage thousands of documents including maintenance reports, operating procedures, inspection records, manuals, and safety guidelines. These documents are often scattered across multiple systems, making information retrieval slow and inefficient.
+Industrial organizations manage thousands of documents such as operating procedures, maintenance manuals, inspection reports, safety guidelines, and technical documentation. Finding accurate information quickly is difficult because these documents are often distributed across multiple systems and formats.
 
-This project aims to build a unified AI system that transforms industrial documents into actionable knowledge.
+This project aims to build an intelligent AI platform that indexes industrial documents, performs semantic search, and answers user questions using Retrieval-Augmented Generation (RAG).
 
-## Features (Planned)
+---
 
-* Document ingestion and processing
-* PDF and scanned document support
-* OCR-based text extraction
-* RAG-powered question answering
-* Source citations and traceability
-* Knowledge graph generation
-* Maintenance intelligence support
-* Compliance and operational insights
+## Current Features
+
+### Document Processing
+
+- Multi-format document upload
+- PDF parsing using PyMuPDF
+- TXT parsing
+- CSV parsing
+- DOCX parsing
+- PPTX parsing
+- XLSX parsing
+
+### AI Processing Pipeline
+
+- Document chunking using a sliding window approach
+- Local embedding generation using Ollama (`mxbai-embed-large`)
+- Batch embedding generation
+- Persistent vector storage with ChromaDB
+- Semantic similarity search
+- Metadata-preserving document indexing
+
+### Backend API
+
+- File upload endpoint
+- Document parsing endpoint
+- Chunk generation endpoint
+- Embedding generation endpoint
+- Semantic search endpoint
+
+---
 
 ## Tech Stack
 
-* Python
-* FastAPI
-* LangChain
-* ChromaDB
-* Streamlit
-* PyMuPDF
-* Tesseract OCR
-* NetworkX / Neo4j
+### Backend
+
+- Python
+- FastAPI
+- Pydantic
+
+### AI & NLP
+
+- LangChain
+- Ollama
+- ChromaDB
+
+### Document Processing
+
+- PyMuPDF
+- python-docx
+- python-pptx
+- openpyxl
+
+### Frontend (Planned)
+
+- Streamlit
+
+### OCR (Planned)
+
+- Tesseract OCR
+
+### Knowledge Graph (Planned)
+
+- NetworkX / Neo4j
+
+---
+
+## Project Architecture
+
+```text
+User
+ │
+ ▼
+Upload Document
+ │
+ ▼
+Document Parsing
+ │
+ ▼
+Text Chunking
+ │
+ ▼
+Embedding Generation (Ollama)
+ │
+ ▼
+ChromaDB Vector Store
+ │
+ ▼
+Semantic Retrieval
+ │
+ ▼
+RAG (Upcoming)
+```
+
+---
 
 ## Project Structure
 
 ```text
-backend/
-frontend/
-data/
-docs/
+industrial-knowledge-intelligence/
+
+├── backend/
+│   ├── embedding/
+│   ├── models/
+│   ├── parsers/
+│   ├── services/
+│   ├── vectorstore/
+│   ├── uploads/
+│   ├── config.py
+│   └── main.py
+│
+├── data/
+├── docs/
+├── frontend/
+├── CHANGELOG.md
+├── README.md
+└── requirements.txt
 ```
+
+---
 
 ## Current Progress
 
-* [x] Repository setup
-* [ ] PDF upload pipeline
-* [ ] Text extraction
-* [ ] Vector database
-* [ ] RAG chatbot
-* [ ] Knowledge graph
-* [ ] Deployment
+### Completed
 
-## Future Scope
+- [x] Project setup
+- [x] FastAPI backend
+- [x] Multi-format document upload
+- [x] Multi-format document parsing
+- [x] Document chunking pipeline
+- [x] Local embedding generation (Ollama)
+- [x] ChromaDB vector database integration
+- [x] Semantic document indexing
+- [x] Semantic similarity search
 
-The platform will provide engineers and maintenance teams with intelligent search, operational insights, and connected industrial knowledge across multiple document sources.
+### In Progress
+
+- [ ] Retrieval-Augmented Generation (RAG)
+- [ ] Prompt engineering
+- [ ] Local LLM integration
+
+### Planned
+
+- [ ] OCR support
+- [ ] Camera-based document capture
+- [ ] Voice input
+- [ ] Drawing/P&ID upload
+- [ ] Mobile-friendly interface
+- [ ] Knowledge graph generation
+- [ ] Deployment
+
+---
+
+## Roadmap
+
+- ✅ Document ingestion
+- ✅ Semantic indexing
+- ✅ Vector database integration
+- ✅ Semantic retrieval
+- 🔄 Retrieval-Augmented Generation (RAG)
+- ⏳ Industrial knowledge graph
+- ⏳ Intelligent maintenance assistant
+- ⏳ Production deployment
+
+---
+
+## Learning Objectives
+
+This project is being built to gain practical experience with:
+
+- FastAPI backend development
+- Service-oriented architecture
+- Retrieval-Augmented Generation (RAG)
+- LangChain
+- Ollama
+- ChromaDB
+- Vector databases
+- Semantic search
+- Local LLM deployment
+- Production-ready AI system design
+
+---
+
+## License
+
+This project is developed for learning, research, and hackathon purposes.
