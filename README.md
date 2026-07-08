@@ -113,21 +113,29 @@ RAG (Upcoming)
 industrial-knowledge-intelligence/
 
 ├── backend/
+│   ├── chunking/
 │   ├── embedding/
 │   ├── models/
 │   ├── parsers/
 │   ├── services/
 │   ├── vectorstore/
-│   ├── uploads/
+│   ├── __init__.py
 │   ├── config.py
 │   └── main.py
 │
 ├── data/
 ├── docs/
+│   └── learning_journal.md
+│
 ├── frontend/
+│   └── .gitkeep
+│
+├── .gitignore
 ├── CHANGELOG.md
 ├── README.md
 └── requirements.txt
+
+> **Note:** The `uploads/` and `chroma_db/` directories are created automatically at runtime and are excluded from version control via `.gitignore`.
 ```
 
 ---
