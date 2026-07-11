@@ -15,3 +15,9 @@ backend/uploads/
 # OS files
 .DS_Store
 Thumbs.db
+
+# ChromaDB
+chroma_db/
+
+# Environment variables
+.env

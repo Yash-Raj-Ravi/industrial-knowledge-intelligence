@@ -280,3 +280,49 @@ Building a vector database is far more than simply storing embeddings. A clean r
 ## Next Goal
 
 Integrate a local LLM with the semantic retrieval pipeline by constructing prompts from the retrieved document chunks, generating context-aware responses using Ollama, and completing the Retrieval-Augmented Generation (RAG) workflow.
+
+# Day 8
+
+## Completed
+
+* Integrated a local LLM using Ollama with configurable `LLM_MODEL` and `OLLAMA_BASE_URL`.
+* Implemented `LLMModel` to abstract communication with the local language model.
+* Implemented `LLMService` to generate responses while isolating model-specific inference logic.
+* Implemented `build_prompt()` utility to construct context-aware prompts from retrieved document chunks and user queries.
+* Implemented `RAGRequest` and `RAGResponse` Pydantic models.
+* Implemented `RAGService` to orchestrate semantic retrieval, prompt construction, LLM inference, and response generation.
+* Added `POST /ask` API endpoint for Retrieval-Augmented Generation (RAG).
+* Added lightweight `EmbedResponse` model to expose indexing summaries instead of returning embedding vectors.
+* Added development-only `POST /reset` API endpoint for clearing and recreating the ChromaDB collection.
+* Successfully completed end-to-end Retrieval-Augmented Generation using locally hosted Ollama models.
+* Successfully generated grounded responses using only retrieved document context.
+* Successfully validated optional source citation support with both `include_sources=true` and `include_sources=false`.
+* Successfully verified graceful handling of out-of-context questions without hallucinating unsupported information.
+
+## Concepts Learned
+
+* Local Large Language Models (LLMs)
+* Ollama
+* ChatOllama
+* Prompt Engineering
+* Prompt Construction
+* Retrieval-Augmented Generation (RAG)
+* Context Injection
+* LLM Inference Pipeline
+* Service Orchestration
+* Composition of Services
+* Response Grounding
+* Hallucination Prevention
+* Separation of Internal and Public API Models
+* API Response Design
+* Early Return Pattern
+* List Comprehensions
+* Development Utilities for Backend Systems
+
+## Biggest Learning
+
+A Retrieval-Augmented Generation system is much more than simply connecting a language model to a vector database. The retrieval, prompt construction, and language generation stages should remain independent, with each component having a single well-defined responsibility. By introducing `LLMService`, `RAGService`, and a dedicated prompt builder, the backend now coordinates semantic retrieval and language generation through clean service abstractions rather than tightly coupling individual components. This made it clear that building a maintainable RAG system depends as much on software architecture and separation of concerns as it does on machine learning models.
+
+## Next Goal
+
+Refactor the backend using dependency injection to eliminate duplicated service instances, improve object ownership, fix vector database reset behavior, and further strengthen the overall backend architecture while preparing the project for production-oriented enhancements.

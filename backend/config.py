@@ -1,4 +1,8 @@
-UPLOAD_DIR = "uploads"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+UPLOAD_DIR = BASE_DIR / "uploads"
 
 ALLOWED_TYPES = {"application/pdf",
 
@@ -25,7 +29,10 @@ EMBEDDING_MODEL = "mxbai-embed-large:latest"
 OLLAMA_BASE_URL = "http://localhost:11434"
 
 # Vector database
-CHROMA_PATH = "./chroma_db"
+CHROMA_PATH = BASE_DIR / "chroma_db"
 COLLECTION_NAME = "industrial_documents"
+
+# LLM
+LLM_MODEL = "llama3.1:8b"
 
 

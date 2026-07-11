@@ -10,3 +10,11 @@ class EmbeddingResponse(BaseModel):
     total_chunks: int
     embeddings: list[ChunkEmbedding]
     embedding_dimension: int
+
+class EmbedResponse(BaseModel):
+    message: str
+    total_chunks: int
+    embedding_dimension: int
+
+class ResetResponse(BaseModel):
+    message: str

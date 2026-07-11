@@ -199,3 +199,46 @@ All notable changes to this project will be documented in this file.
 * Backend now supports uploading, parsing, chunking, embedding, indexing, and semantic search over multiple document formats.
 * Clean service-oriented architecture established with `DocumentService`, `ChunkService`, `EmbeddingService`, `SearchService`, `EmbeddingModel`, and `ChromaStore`.
 * Ready to integrate a local LLM for Retrieval-Augmented Generation (RAG), prompt construction, and context-aware answer generation.
+
+# Day 8
+
+## Added
+
+* Integrated a local LLM using **Ollama** with configurable `LLM_MODEL` and `OLLAMA_BASE_URL`.
+* Implemented `LLMModel` to abstract interactions with the local language model.
+* Implemented `LLMService` to generate responses from prompts while isolating model-specific inference logic.
+* Implemented `build_prompt()` utility for constructing context-aware prompts using retrieved document chunks and user queries.
+* Implemented `RAGRequest` and `RAGResponse` Pydantic models.
+* Implemented `RAGService` to orchestrate semantic retrieval, prompt construction, LLM inference, and response generation.
+* Added `POST /ask` API endpoint for Retrieval-Augmented Generation (RAG).
+* Added lightweight `EmbedResponse` model to expose indexing summaries instead of embedding vectors.
+* Added development-only `POST /reset` API endpoint for clearing and recreating the ChromaDB collection.
+
+## Changed
+
+* Refactored the embedding endpoint to return concise indexing metadata instead of exposing internal embedding vectors.
+* Improved API design by separating internal embedding models from public response models.
+* Refactored the RAG pipeline into dedicated retrieval, prompt construction, and language model layers.
+* Implemented optional source citation support through the `include_sources` request parameter.
+* Improved service-layer orchestration by ensuring `RAGService` coordinates existing services instead of directly implementing retrieval or inference logic.
+
+## Tested
+
+* Successfully verified end-to-end Retrieval-Augmented Generation using locally hosted Ollama models.
+* Confirmed semantic retrieval of the most relevant document chunks before answer generation.
+* Verified prompt construction using retrieved context and user queries.
+* Successfully validated grounded answer generation using only information from indexed documents.
+* Confirmed correct handling of out-of-context questions without hallucinating unsupported information.
+* Verified optional source citation support with both `include_sources=true` and `include_sources=false`.
+* Successfully validated the complete upload → embed → ask workflow through FastAPI Swagger UI.
+* Confirmed ChromaDB persistence across application restarts.
+* Identified duplicate retrieval behaviour caused by repeated indexing of identical documents during development.
+
+## Project Status
+
+* End-to-end Retrieval-Augmented Generation (RAG) pipeline completed.
+* Backend now supports document upload, parsing, chunking, embedding generation, vector indexing, semantic retrieval, prompt construction, and grounded answer generation using a local LLM.
+* Service-oriented architecture expanded with `LLMModel`, `LLMService`, and `RAGService` while maintaining clear separation of concerns.
+* Public API now exposes complete semantic question-answering functionality through the `POST /ask` endpoint.
+* Development utilities added for vector database management and simplified iterative testing.
+* Ready for architectural refinements including dependency injection, retrieval filtering, and production-oriented backend improvements.
