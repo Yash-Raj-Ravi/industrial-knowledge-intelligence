@@ -326,3 +326,48 @@ A Retrieval-Augmented Generation system is much more than simply connecting a la
 ## Next Goal
 
 Refactor the backend using dependency injection to eliminate duplicated service instances, improve object ownership, fix vector database reset behavior, and further strengthen the overall backend architecture while preparing the project for production-oriented enhancements.
+
+# Day 9
+
+## Completed
+
+* Created a dedicated `core/dependencies.py` module to centralize application dependency management.
+* Implemented dependency provider functions (`get_*`) for all major services and infrastructure components.
+* Integrated FastAPI's `Depends()` across backend endpoints for dependency injection.
+* Refactored `EmbeddingService` to receive `EmbeddingModel` through constructor injection.
+* Refactored `SearchService` to receive `EmbeddingService` and `ChromaStore` through constructor injection.
+* Refactored `LLMService` to receive `LLMModel` through constructor injection.
+* Refactored `RAGService` to receive `SearchService` and `LLMService` through constructor injection.
+* Removed direct service instantiation from `main.py` by centralizing object creation in a dedicated composition root.
+* Successfully unified all services around a shared `ChromaStore` instance.
+* Successfully resolved vector database reset behavior by eliminating duplicate `ChromaStore` instances across the application.
+* Successfully verified application startup after introducing constructor-based dependency injection.
+* Successfully validated complete upload → embed → search → ask workflow after architectural refactoring.
+* Successfully verified repeated reset → embed → search → ask cycles without requiring backend restart.
+
+## Concepts Learned
+
+* Dependency Injection (DI)
+* Constructor Injection
+* FastAPI `Depends()`
+* Dependency Providers
+* Composition Root
+* Inversion of Control (IoC)
+* Object Lifetime Management
+* Shared Service Instances
+* Service Composition
+* Loose Coupling
+* Separation of Concerns
+* Single Responsibility Principle (SRP)
+* Dependency Graph
+* Backend Architecture
+* State Management
+* Production-Oriented Backend Design
+
+## Biggest Learning
+
+Dependency Injection is much more than replacing object creation with `Depends()`. The real benefit comes from separating object construction from business logic so that every service receives its dependencies instead of creating them itself. By introducing a centralized composition root and constructor injection, the backend now has a single source of truth for shared services and infrastructure. This not only simplified object ownership and eliminated duplicated service instances, but also resolved the ChromaDB reset issue by ensuring every component operates on the same shared vector store. The refactor demonstrated that good software architecture can solve system-level problems just as effectively as changes to application logic.
+
+## Next Goal
+
+Extend the document ingestion pipeline with OCR support for scanned PDFs and image-based documents, allowing the system to extract text from non-selectable documents while keeping the existing parser architecture extensible and maintainable.

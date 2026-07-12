@@ -3,11 +3,14 @@ from backend.services.embedding_service import EmbeddingService
 from backend.vectorstore.chroma_store import ChromaStore
 
 class SearchService:
-
-    def __init__(self):
-        self.embedding_service = EmbeddingService()
-        self.store = ChromaStore()
-
+    def __init__(
+        self,
+        embedding_service: EmbeddingService,
+        store: ChromaStore,
+    ):
+        self.embedding_service = embedding_service
+        self.store = store
+        
     def search(self, request:SearchRequest) -> SearchResponse:
         if self.store.collection.count() == 0:
             raise ValueError("No documents have been indexed yet.")

@@ -3,9 +3,8 @@ from backend.models.chunk import Chunk
 from backend.models.embedding import ChunkEmbedding,EmbeddingResponse
 
 class EmbeddingService:
-
-     def __init__(self):
-         self.embedding_model = EmbeddingModel()
+     def __init__(self, embedding_model: EmbeddingModel):
+         self.embedding_model = embedding_model
 
      def generate_chunk_embeddings(self,chunks:list[Chunk]) -> EmbeddingResponse:
          if not chunks:

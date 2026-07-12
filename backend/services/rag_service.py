@@ -5,9 +5,13 @@ from backend.models.search import SearchRequest
 from backend.utils.prompt_builder import build_prompt
 
 class RAGService:
-    def __init__(self):
-        self.search_service = SearchService()
-        self.llm_service = LLMService()
+    def __init__(
+        self,
+        search_service: SearchService,
+        llm_service: LLMService,
+    ):
+        self.search_service = search_service
+        self.llm_service = llm_service
 
     def answer_query(self,request:RAGRequest) -> RAGResponse:
         search_request = SearchRequest(query=request.query,

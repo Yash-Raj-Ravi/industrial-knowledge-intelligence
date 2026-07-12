@@ -242,3 +242,41 @@ All notable changes to this project will be documented in this file.
 * Public API now exposes complete semantic question-answering functionality through the `POST /ask` endpoint.
 * Development utilities added for vector database management and simplified iterative testing.
 * Ready for architectural refinements including dependency injection, retrieval filtering, and production-oriented backend improvements.
+
+# Day 9
+
+## Added
+
+* Created a dedicated `core/dependencies.py` module to centralize application dependency management.
+* Implemented FastAPI dependency providers (`get_*`) for all major services and infrastructure components.
+* Integrated FastAPI's `Depends()` across backend endpoints for dependency injection.
+* Introduced constructor-based dependency injection throughout the service layer.
+* Added shared singleton-like instances for `EmbeddingModel`, `LLMModel`, and `ChromaStore` through the centralized dependency container.
+
+## Changed
+
+* Refactored object creation out of `main.py` into a dedicated composition root (`dependencies.py`).
+* Refactored `EmbeddingService` to receive `EmbeddingModel` through constructor injection instead of instantiating it internally.
+* Refactored `SearchService` to receive `EmbeddingService` and `ChromaStore` through constructor injection.
+* Refactored `LLMService` to receive `LLMModel` through constructor injection.
+* Refactored `RAGService` to receive `SearchService` and `LLMService` through constructor injection.
+* Updated all API endpoints (`/parse`, `/chunk`, `/embed`, `/search`, `/ask`, `/reset`) to obtain dependencies through FastAPI's dependency injection system.
+* Eliminated direct service instantiation throughout the application, improving separation of concerns and object ownership.
+
+## Tested
+
+* Successfully verified application startup after introducing constructor-based dependency injection.
+* Confirmed all API endpoints function correctly after migrating to FastAPI `Depends()`.
+* Verified document upload, parsing, chunking, embedding, semantic search, and RAG workflows continue to operate correctly.
+* Successfully validated shared `ChromaStore` usage across all services.
+* Confirmed vector database reset correctly updates the shared collection without requiring an application restart.
+* Successfully verified repeated reset → embed → search → ask workflows using the same shared infrastructure instances.
+
+## Project Status
+
+* Backend architecture successfully refactored to use centralized dependency management and constructor-based dependency injection.
+* Service creation is now fully centralized within a dedicated composition root, improving maintainability and scalability.
+* Business logic has been cleanly separated from object creation, resulting in loosely coupled services.
+* Shared infrastructure components now maintain consistent application state across all endpoints.
+* ChromaDB reset behavior has been fully resolved through shared dependency ownership.
+* Backend is now built on a production-oriented architecture that is easier to extend, maintain, and test while preparing the project for future features such as OCR, authentication, and additional document processing capabilities.
