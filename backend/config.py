@@ -35,4 +35,6 @@ COLLECTION_NAME = "industrial_documents"
 # LLM
 LLM_MODEL = "llama3.1:8b"
 
+# OCR
+TESSERACT_PATH = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
 

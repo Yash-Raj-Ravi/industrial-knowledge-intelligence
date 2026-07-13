@@ -280,3 +280,42 @@ All notable changes to this project will be documented in this file.
 * Shared infrastructure components now maintain consistent application state across all endpoints.
 * ChromaDB reset behavior has been fully resolved through shared dependency ownership.
 * Backend is now built on a production-oriented architecture that is easier to extend, maintain, and test while preparing the project for future features such as OCR, authentication, and additional document processing capabilities.
+
+# Day 10
+
+## Added
+
+* Added OCR support for scanned PDF documents using Tesseract OCR.
+* Created a dedicated `OCRService` (`core/ocr.py`) to encapsulate OCR functionality.
+* Integrated `pdf2image` for converting scanned PDF pages into images.
+* Added centralized `TESSERACT_PATH` configuration in `config.py`.
+* Added `OCRService` to the centralized dependency container (`core/dependencies.py`).
+
+## Changed
+
+* Refactored `DocumentService` to receive `OCRService` through constructor-based dependency injection.
+* Refactored `ChunkService` to receive `DocumentService` through constructor injection, maintaining a fully dependency-injected service layer.
+* Modified the PDF parser to receive `OCRService` as a dependency instead of instantiating it internally.
+* Extended the PDF parsing workflow with a hybrid text extraction strategy:
+  * Use PyMuPDF (`page.get_text()`) for searchable pages.
+  * Automatically fall back to OCR for scanned pages with no extractable text.
+* Optimized OCR processing by rendering only the required PDF page instead of converting the entire document.
+* Moved machine-specific Tesseract configuration out of `OCRService` into centralized application configuration.
+
+## Tested
+
+* Successfully verified standalone OCR extraction from image files using Tesseract.
+* Confirmed OCR correctly extracts text from scanned PDF documents.
+* Verified searchable PDFs continue using native text extraction without invoking OCR.
+* Successfully validated automatic OCR fallback for fully scanned PDFs.
+* Successfully verified hybrid PDFs containing both searchable and scanned pages.
+* Confirmed complete upload → parse → chunk → embed → search → ask workflow functions correctly after OCR integration.
+* Verified all existing backend functionality remains unaffected after introducing OCR support.
+
+## Project Status
+
+* Backend now supports both searchable and scanned PDF documents through a hybrid text extraction pipeline.
+* OCR has been cleanly integrated without impacting chunking, embeddings, semantic search, or RAG generation.
+* Dependency injection architecture has been consistently extended to include OCR while preserving centralized object creation and loose coupling.
+* PDF parsing now automatically selects the appropriate extraction strategy on a per-page basis, making the ingestion pipeline more robust for real-world documents.
+* Backend architecture is now prepared for future enhancements such as image file parsing, camera-based document ingestion, OCR preprocessing, and advanced document processing capabilities.

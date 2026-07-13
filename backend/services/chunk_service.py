@@ -5,8 +5,8 @@ from backend.models.chunk import Chunk
 
 class ChunkService:
 
-    def __init__(self):
-        self.document_service = DocumentService()
+    def __init__(self, document_service: DocumentService):
+        self.document_service = document_service
         self.chunker = TextChunker(
             CHUNK_SIZE,
             CHUNK_OVERLAP

@@ -371,3 +371,50 @@ Dependency Injection is much more than replacing object creation with `Depends()
 ## Next Goal
 
 Extend the document ingestion pipeline with OCR support for scanned PDFs and image-based documents, allowing the system to extract text from non-selectable documents while keeping the existing parser architecture extensible and maintainable.
+
+# Day 10
+
+## Completed
+
+* Added OCR support for scanned PDF documents using Tesseract OCR.
+* Created a dedicated `OCRService` (`core/ocr.py`) to encapsulate OCR functionality.
+* Installed and configured Tesseract OCR Engine for text extraction from images.
+* Installed and configured Poppler for converting PDF pages into images.
+* Integrated `pdf2image` to convert scanned PDF pages into `PIL.Image` objects.
+* Added centralized `TESSERACT_PATH` configuration within `config.py`.
+* Added `OCRService` to the centralized dependency container (`core/dependencies.py`).
+* Refactored `DocumentService` to receive `OCRService` through constructor injection.
+* Refactored `ChunkService` to receive `DocumentService` through constructor injection, maintaining a fully dependency-injected service layer.
+* Modified the PDF parser to receive `OCRService` as a dependency instead of creating it internally.
+* Implemented a hybrid PDF parsing strategy that first attempts native text extraction using PyMuPDF and automatically falls back to OCR for pages without extractable text.
+* Optimized OCR execution by converting only the required PDF page into an image instead of rendering the entire document.
+* Successfully verified standalone OCR extraction from image files.
+* Successfully validated searchable PDFs using native text extraction without invoking OCR.
+* Successfully validated fully scanned PDFs using automatic OCR fallback.
+* Successfully verified hybrid PDFs containing both searchable and scanned pages.
+* Successfully confirmed complete upload → parse → chunk → embed → search → ask workflow after OCR integration.
+
+## Concepts Learned
+
+* Optical Character Recognition (OCR)
+* Tesseract OCR Engine
+* Poppler
+* pdf2image
+* PIL (Pillow)
+* Hybrid Document Parsing
+* Fallback Processing
+* Native Text Extraction vs OCR
+* Searchable PDF vs Scanned PDF
+* Per-Page Processing
+* Lazy Resource Processing
+* Dependency Injection in Parser Architecture
+* Configuration Management
+* Extensible Backend Design
+
+## Biggest Learning
+
+OCR integration is much more than simply extracting text from images. A robust document ingestion pipeline should first use the fastest and most accurate extraction method available before falling back to OCR only when necessary. By combining native text extraction with page-level OCR fallback, the backend now supports searchable, scanned, and hybrid PDF documents while avoiding unnecessary image conversion and OCR processing. This implementation demonstrated how clean architecture and dependency injection allow significant new functionality to be added without affecting downstream components such as chunking, embeddings, semantic search, or RAG generation.
+
+## Next Goal
+
+Extend the document ingestion pipeline to support standalone image documents (`.png`, `.jpg`, `.jpeg`) using the existing OCR infrastructure while preserving the current parser architecture. Begin expanding the backend beyond document ingestion by implementing the next major feature from the original project roadmap.

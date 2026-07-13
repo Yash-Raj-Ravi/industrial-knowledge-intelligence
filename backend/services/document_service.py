@@ -1,8 +1,11 @@
 import os # used to extract file extension
 
+from ..core.ocr import OCRService
 from ..parsers.parser_factory import get_parser
 
 class DocumentService:
+    def __init__(self, ocr_service: OCRService):
+        self.ocr_service = ocr_service
     
     def parse_document(self,file_path: str) -> str:
         _, extension = os.path.splitext(file_path)
@@ -10,6 +13,9 @@ class DocumentService:
         # we use _, to skip file name and only extract the extension.
         extension = extension.lower() # Convert extracted extensions to lowercase since the Parsers dictionary contain extensions in lowercase
         parser = get_parser(extension) # For pdf file extension extracted above will be .pdf which when passed to get_parser returns parse_pdf thus parser = parse_pdf
-        text = parser(file_path)
-        return text
+        if extension == ".pdf":
+            return parser(file_path, self.ocr_service)
+
+        return parser(file_path)
+
 

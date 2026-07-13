@@ -7,10 +7,10 @@ from ..vectorstore.chroma_store import ChromaStore
 from ..embedding.embedding_model import EmbeddingModel
 from ..services.llm_service import LLMService
 from ..llm.llm_model import LLMModel
+from ..core.ocr import OCRService
 
 # leading underscore is used to indicate these are private module-level instances:
-_document_service = DocumentService()
-_chunk_service = ChunkService()
+
 _store = ChromaStore()
 _embedding_model = EmbeddingModel()
 _embedding_service = EmbeddingService(_embedding_model)
@@ -21,6 +21,9 @@ _search_service = SearchService(
 _llm_model = LLMModel()
 _llm_service = LLMService(_llm_model)
 
+_ocr_service = OCRService()
+_document_service = DocumentService(_ocr_service)
+_chunk_service = ChunkService(_document_service)
 _rag_service = RAGService(
     _search_service,
     _llm_service,
@@ -43,3 +46,6 @@ def get_search_service():
 
 def get_chroma_store():
     return _store
+
+def get_ocr_service():
+    return _ocr_service
