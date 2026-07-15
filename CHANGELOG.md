@@ -319,3 +319,56 @@ All notable changes to this project will be documented in this file.
 * Dependency injection architecture has been consistently extended to include OCR while preserving centralized object creation and loose coupling.
 * PDF parsing now automatically selects the appropriate extraction strategy on a per-page basis, making the ingestion pipeline more robust for real-world documents.
 * Backend architecture is now prepared for future enhancements such as image file parsing, camera-based document ingestion, OCR preprocessing, and advanced document processing capabilities.
+
+# Day 11
+
+## Added
+
+* Developed the initial Streamlit frontend for the Industrial Knowledge Intelligence platform.
+* Created a dedicated frontend `config.py` to centralize application settings, backend URL, API endpoints, and request timeout configuration.
+* Implemented a reusable frontend API layer (`api.py`) to abstract communication with the FastAPI backend.
+* Added backend health check functionality to verify API availability from the frontend.
+* Created the main Streamlit application (`app.py`) with application branding, welcome page, and backend status indicator.
+* Developed the **Upload Documents** page for document ingestion.
+* Added document selection using `st.file_uploader()` with support for PDF, TXT, CSV, PPTX, DOCX, and XLSX files.
+* Added document information cards displaying filename, file size, and file type before upload.
+* Implemented complete upload → embed workflow through the frontend using FastAPI endpoints.
+* Added upload progress indicator using `st.spinner()`.
+* Added success and error handling for document indexing operations.
+* Created the **Chat with Knowledge Base** page using Streamlit's native chat components.
+* Added persistent chat history using `st.session_state`.
+* Implemented reusable `ask_question()` API wrapper for communicating with the backend RAG endpoint.
+* Added conversational interface using `st.chat_input()` and `st.chat_message()`.
+
+## Changed
+
+* Refactored frontend API communication to use centralized endpoint constants from `config.py` instead of hardcoded endpoint paths.
+* Standardized frontend API responses to return a consistent success/error structure across upload and chat operations.
+* Separated frontend presentation logic from backend communication by encapsulating HTTP requests inside `api.py`.
+* Organized frontend into multiple Streamlit pages to separate application dashboard, document upload, and chat functionality.
+* Implemented chat state management using Streamlit session state to preserve conversation history across reruns.
+
+## Tested
+
+* Successfully verified frontend can detect backend availability through the health check endpoint.
+* Successfully validated complete upload → embed pipeline through the Streamlit interface.
+* Confirmed uploaded documents are indexed correctly into ChromaDB through the frontend.
+* Verified document metadata (filename, size, and type) displays correctly before upload.
+* Successfully tested conversational RAG workflow through the Streamlit chat interface.
+* Confirmed chat history persists correctly across multiple user interactions.
+* Verified frontend error handling for backend communication failures.
+* Successfully validated complete end-to-end workflow:
+  * Upload document
+  * Generate chunks
+  * Create embeddings
+  * Store vectors
+  * Query indexed knowledge base
+  * Receive grounded AI-generated responses
+
+## Project Status
+
+* The project has evolved from a backend-only API into a complete end-to-end RAG application with an interactive web interface.
+* Users can now upload industrial documents, build a searchable knowledge base, and interact with it through a conversational AI interface.
+* Frontend architecture cleanly separates presentation, API communication, and application configuration, improving maintainability and extensibility.
+* Upload and chat functionalities are fully integrated with the existing FastAPI backend while preserving the modular dependency-injected backend architecture.
+* The application is now functionally complete for document ingestion and conversational retrieval, with remaining work focused on UI refinement, source citation visualization, repository management, and overall hackathon presentation polish.
