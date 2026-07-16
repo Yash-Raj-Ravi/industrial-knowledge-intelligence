@@ -464,3 +464,53 @@ Building the frontend involved much more than creating user interfaces. A well-d
 ## Next Goal
 
 Enhance the frontend by implementing document source citation visualization, improving metadata returned from semantic search, developing repository management features, integrating `streamlit-option-menu` for a more professional navigation experience, and refining the overall user interface to create a polished, hackathon-ready demonstration of the Industrial Knowledge Intelligence platform.
+
+# Day 12
+
+## Completed
+
+* Extended the document upload workflow to support uploading multiple documents simultaneously using Streamlit's `accept_multiple_files` feature.
+* Added batch document indexing with upload progress visualization.
+* Enhanced the chat interface by grouping retrieved source citations according to their originating documents.
+* Added relevance score calculation and display for retrieved document chunks.
+* Implemented document-level citation grouping with highest relevance score for each retrieved document.
+* Refactored prompt construction to include document names and balanced retrieved context by limiting the number of chunks contributed by each document.
+* Developed a reusable **Sidebar** component displaying backend status and repository statistics across all frontend pages.
+* Implemented dynamic suggested questions generated from indexed repository documents.
+* Added adaptive suggested questions that automatically change based on the number of indexed documents.
+* Added clickable suggested question buttons for initiating conversations directly from the chat interface.
+* Added contextual empty-state handling for the chat page when no documents are indexed.
+* Added simulated streaming responses to improve conversational user experience.
+* Developed the **Repository** page for viewing indexed documents.
+* Added repository statistics showing total indexed documents and total stored chunks.
+* Displayed indexed documents as information cards with file-type icons, document type, and chunk count.
+* Implemented backend repository management using a dedicated `RepositoryService`.
+* Added repository endpoint for retrieving indexed document metadata from ChromaDB.
+* Implemented **Reset Knowledge Base** functionality through the frontend.
+* Added confirmation checkbox to prevent accidental repository reset operations.
+* Successfully validated complete multi-document Retrieval-Augmented Generation (RAG) workflow through the frontend.
+
+## Concepts Learned
+
+* Multi-file Upload using `st.file_uploader()`
+* Streamlit Progress Components
+* Source Citation Visualization
+* Metadata Aggregation from Vector Databases
+* Repository Management
+* Reusable Streamlit Components
+* Dynamic UI Generation
+* Conditional Rendering in Streamlit
+* Streamlit Sidebar Components
+* Semantic Search Result Presentation
+* Retrieval Context Balancing
+* ChromaDB Metadata Processing
+* Simulated Response Streaming
+* Multi-Document Retrieval-Augmented Generation (RAG)
+
+## Biggest Learning
+
+A production-ready Retrieval-Augmented Generation system requires much more than retrieving relevant chunks from a vector database. Presenting grouped citations, balancing retrieved context across multiple documents, exposing repository management features, and providing contextual user guidance significantly improve usability without modifying the underlying retrieval pipeline. Building reusable frontend components and dynamically adapting the interface based on repository state demonstrated how thoughtful UI design can greatly enhance the overall user experience while preserving a modular backend architecture.
+
+## Next Goal
+
+Extend the Industrial Knowledge Intelligence platform to support OCR directly from image files by implementing dedicated image parsers for PNG, JPG, and JPEG formats, integrate camera capture through Streamlit, and route both uploaded images and captured photos through the existing OCR → Chunking → Embedding → ChromaDB → RAG pipeline, enabling conversational querying over image-based industrial documents.

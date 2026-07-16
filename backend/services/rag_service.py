@@ -3,6 +3,8 @@ from backend.services.search_service import SearchService
 from backend.models.rag import RAGResponse, RAGRequest
 from backend.models.search import SearchRequest
 from backend.utils.prompt_builder import build_prompt
+from backend.config import MAX_CHUNKS_PER_DOCUMENT
+from collections import defaultdict
 
 class RAGService:
     def __init__(
@@ -18,18 +20,33 @@ class RAGService:
                                         top_k=request.top_k)
         search_response = self.search_service.search(search_request)
         search_results = search_response.results
+
         if not search_results:
             return RAGResponse(answer = "No relevant information was found in the indexed documents.")
 
-    # Extract only the retrieved chunk texts for prompt construction.
-        chunks = [result.text for result in search_results]
-        prompt = build_prompt(chunks=chunks,query=request.query)
+        grouped_results = defaultdict(list)
+
+        for result in search_results:
+            grouped_results[result.metadata.file_name].append(result)
+
+        balanced_results = []
+
+        for document_results in grouped_results.values():
+            balanced_results.extend(document_results[:MAX_CHUNKS_PER_DOCUMENT])
+        balanced_results.sort(key=lambda result: result.distance)
+
+        prompt = build_prompt(
+            search_results=balanced_results,
+            query=request.query
+        )
         answer = self.llm_service.generate_response(prompt)
 
         if not request.include_sources:
             return RAGResponse(answer = answer)
 
-        return RAGResponse(answer = answer,sources = search_results)
+        return RAGResponse(answer = answer,sources = balanced_results)
+
+
 
 
 

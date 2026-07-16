@@ -113,7 +113,7 @@ def ask_question(question:str) -> dict:
             get_url(ASK_ENDPOINT),
             json={
                 "query" : question,
-                "top_k" : 4,
+                "top_k" : 20,
                 "include_sources" : True
                 },
             timeout = REQUEST_TIMEOUT
@@ -128,6 +128,59 @@ def ask_question(question:str) -> dict:
         return {
             "success": False,
             "error": "Unable to connect to the backend."
+        }
+
+def get_documents() -> dict:
+    try:
+        response = requests.get(
+            get_url("/documents"),
+            timeout=REQUEST_TIMEOUT
+        )
+
+        if response.status_code != 200:
+            return {
+                "success": False,
+                "error": response.json().get(
+                    "detail",
+                    "Failed to fetch repository."
+                )
+            }
+
+        return {
+            "success": True,
+            "data": response.json()
+        }
+
+    except requests.RequestException:
+        return {
+            "success": False,
+            "error": "Unable to connect to backend."
+        }
+
+def reset_database() -> dict:
+    try:
+        response = requests.post(
+            get_url("/reset"),
+            timeout=REQUEST_TIMEOUT
+        )
+        if response.status_code != 200:
+            return {
+                "success": False,
+                "error": response.json().get(
+                    "detail",
+                    "Failed to reset database."
+                )
+            }
+
+        return {
+            "success": True,
+            "data": response.json()
+        }
+
+    except requests.RequestException:
+        return {
+            "success": False,
+            "error": "Unable to connect to backend."
         }
 
 

@@ -1,16 +1,14 @@
 import streamlit as st
 from config import APP_TITLE
 from api import check_backend
+from components.sidebar import render_sidebar
+
+render_sidebar()
 
 def main():
     st.title(f"🏭 {APP_TITLE}")
 
     st.caption("AI-powered industrial knowledge retrieval using Retrieval-Augmented Generation (RAG).")
-
-    if check_backend():
-        st.success("🟢 Backend Online")
-    else:
-        st.error("🔴 Backend Offline")
 
     with st.container():
         st.subheader("Welcome")

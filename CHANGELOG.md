@@ -372,3 +372,68 @@ All notable changes to this project will be documented in this file.
 * Frontend architecture cleanly separates presentation, API communication, and application configuration, improving maintainability and extensibility.
 * Upload and chat functionalities are fully integrated with the existing FastAPI backend while preserving the modular dependency-injected backend architecture.
 * The application is now functionally complete for document ingestion and conversational retrieval, with remaining work focused on UI refinement, source citation visualization, repository management, and overall hackathon presentation polish.
+
+# Day 12
+
+## Added
+
+* Extended the document upload workflow to support multiple file uploads using Streamlit's `accept_multiple_files` feature.
+* Added batch document upload with upload progress visualization.
+* Implemented grouped source citation visualization by organizing retrieved chunks under their corresponding document names.
+* Added relevance score calculation and display for retrieved document chunks.
+* Added document-level citation grouping with best retrieved chunk score for each source document.
+* Implemented dynamic suggested questions on the chat page based on indexed repository documents.
+* Added adaptive chat suggestions that change according to the number of indexed documents.
+* Added clickable suggested question buttons to initiate conversations directly from the chat interface.
+* Added dedicated empty-state UI for the chat page when no documents have been indexed.
+* Added reusable sidebar component displaying backend status and repository statistics across all frontend pages.
+* Developed the **Repository** page for viewing indexed documents.
+* Added repository summary statistics including total indexed documents and total stored chunks.
+* Displayed indexed documents as individual information cards with document type icons and chunk counts.
+* Implemented backend repository management endpoint to retrieve indexed document metadata from ChromaDB.
+* Created a dedicated `RepositoryService` to aggregate indexed document information from vector metadata.
+* Implemented **Reset Knowledge Base** functionality through the frontend.
+* Added confirmation checkbox to prevent accidental repository reset operations.
+* Added simulated streaming responses to provide a more interactive conversational experience.
+
+## Changed
+
+* Enhanced RAG source citation presentation by grouping retrieved chunks according to their originating documents.
+* Sorted retrieved document groups based on their highest semantic relevance.
+* Sorted retrieved chunks within each document by similarity score.
+* Replaced raw vector distance values with user-friendly relevance scores.
+* Improved prompt generation by including document names within the retrieved context.
+* Balanced retrieved context by limiting the number of chunks contributed by each document before LLM prompt construction.
+* Improved chat interface through dynamic suggested questions and contextual empty-state handling.
+* Refactored common frontend functionality into reusable sidebar components for consistent UI across pages.
+* Enhanced repository visualization using document cards with file-type icons and repository metrics.
+* Updated upload workflow to process multiple selected documents sequentially from the frontend.
+
+## Tested
+
+* Successfully validated simultaneous upload and indexing of multiple documents.
+* Verified grouped source citations correctly organize retrieved chunks by document.
+* Confirmed relevance scores and document ordering display correctly during chat responses.
+* Successfully tested repository endpoint against indexed ChromaDB metadata.
+* Verified repository statistics accurately reflect indexed documents and total stored chunks.
+* Confirmed repository reset completely clears indexed vectors and updates repository statistics.
+* Successfully validated dynamic suggested questions generated from indexed repository contents.
+* Verified chat empty-state handling when no documents are indexed.
+* Confirmed streamed AI responses display correctly during answer generation.
+* Successfully validated complete multi-document RAG workflow:
+  * Upload multiple documents
+  * Generate chunks
+  * Create embeddings
+  * Store vectors in ChromaDB
+  * Query across multiple indexed documents
+  * Retrieve grouped source citations
+  * Generate grounded AI responses
+
+## Project Status
+
+* The platform now supports complete multi-document knowledge management with conversational retrieval, grouped source citations, repository visualization, and repository management.
+* Repository management enables users to inspect indexed documents, monitor repository statistics, and safely reset the knowledge base when required.
+* The chat interface has been significantly enhanced through dynamic suggested questions, grouped citations, relevance scoring, contextual empty states, and streamed AI responses.
+* Frontend architecture now includes reusable components that improve maintainability and provide a consistent user experience across application pages.
+* The Industrial Knowledge Intelligence platform now delivers a polished end-to-end Retrieval-Augmented Generation (RAG) workflow from document ingestion through semantic retrieval and conversational question answering.
+* The remaining major enhancement is extending OCR support to image formats (PNG, JPG, JPEG) and camera capture, enabling knowledge extraction directly from photographed industrial documents.

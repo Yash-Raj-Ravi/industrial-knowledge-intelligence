@@ -3,7 +3,7 @@ from backend.models.search import SearchResult
 
 class RAGRequest(BaseModel):
     query: str
-    top_k:int = 4
+    top_k:int = 10
     include_sources:bool = True
 
 class RAGResponse(BaseModel):

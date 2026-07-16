@@ -12,6 +12,7 @@ class SearchService:
         self.store = store
         
     def search(self, request:SearchRequest) -> SearchResponse:
+        print("Total vectors:", self.store.collection.count())
         if self.store.collection.count() == 0:
             raise ValueError("No documents have been indexed yet.")
         

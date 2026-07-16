@@ -10,6 +10,9 @@ class ChunkMetadata(BaseModel):
     end_char: int
     char_count: int
     word_count: int
+    document_id: str
+    file_name: str
+    document_type: str
 
 class SearchResult(BaseModel):
     text: str

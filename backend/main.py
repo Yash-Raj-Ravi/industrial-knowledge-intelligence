@@ -1,6 +1,6 @@
 from fastapi import FastAPI,UploadFile,File,HTTPException
 import shutil
-
+import os,uuid
 from .services.chunk_service import ChunkService
 from .services.document_service import DocumentService
 from .services.embedding_service import EmbeddingService
@@ -21,7 +21,12 @@ from .core.dependencies import (
     get_chroma_store,
     get_search_service,
     get_rag_service,
+    get_repository_service
 )
+
+from .models.repository import RepositoryResponse
+from .services.repository_service import RepositoryService
+
 app = FastAPI(
     title="Industrial Knowledge Intelligence API",
     description="Backend API for Industrial Knowledge Intelligence Platform",
@@ -96,8 +101,11 @@ def embed_endpoint(request: FilePathRequest,
                    store: ChromaStore = Depends(get_chroma_store)
                    ):
     try:
+        document_id = str(uuid.uuid4())
+        file_name = os.path.basename(request.file_path)
         chunks = chunk_service.chunk_document(request.file_path)
-        embeddings = embedding_service.generate_chunk_embeddings(chunks)
+        embeddings = embedding_service.generate_chunk_embeddings(chunks,file_name=file_name,document_id = document_id)
+
 
         store.add_embeddings(embeddings.embeddings)
 
@@ -134,7 +142,21 @@ def ask_endpoint(request: RAGRequest,
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
- # Development utility endpoint.
+
+@app.get(
+    "/documents",
+    response_model=RepositoryResponse
+)
+def documents_endpoint(
+    repository_service: RepositoryService = Depends(get_repository_service)
+):
+    try:
+        return repository_service.get_repository()
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Development utility endpoint.
 # Clears the entire ChromaDB collection.
 @app.post("/reset", response_model=ResetResponse)
 def reset_database_endpoint(store: ChromaStore = Depends(get_chroma_store)):

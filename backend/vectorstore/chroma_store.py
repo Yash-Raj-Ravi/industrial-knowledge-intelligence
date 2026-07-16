@@ -2,6 +2,7 @@ import chromadb
 from backend.config import CHROMA_PATH, COLLECTION_NAME
 from backend.models.embedding import ChunkEmbedding
 import uuid
+from collections import defaultdict
 #from pprint import pprint
 
 class ChromaStore:
@@ -20,6 +21,9 @@ class ChromaStore:
 
         metadatas = [
             {
+                "document_id": ce.document_id,
+                "file_name": ce.file_name,
+                "document_type": ce.document_type,
                 "chunk_id": ce.chunk.chunk_id,
                 "start_char": ce.chunk.start_char,
                 "end_char": ce.chunk.end_char,
@@ -59,3 +63,36 @@ class ChromaStore:
                                                  "distances"])
         #pprint(results)
         return results
+
+    def list_documents(self):
+        results = self.collection.get(include=["metadatas"])
+
+        for metadata in results["metadatas"][:10]:
+            print(metadata)
+
+        grouped_documents = defaultdict(
+            lambda: {
+                "file_name": "",
+                "document_type": "",
+                "total_chunks": 0,
+            }
+        )
+
+        for metadata in results["metadatas"]:
+            document = grouped_documents[metadata["document_id"]]
+
+            document["file_name"] = metadata["file_name"]
+            document["document_type"] = metadata["document_type"]
+            document["total_chunks"] += 1
+
+        documents = sorted(
+            grouped_documents.values(),
+            key=lambda doc: doc["file_name"].lower()
+        )
+
+        return {
+            "total_documents": len(documents),
+            "total_chunks": len(results["metadatas"]),
+            "documents": documents
+        }
+

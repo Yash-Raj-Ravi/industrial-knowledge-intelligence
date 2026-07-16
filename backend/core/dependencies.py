@@ -3,11 +3,13 @@ from ..services.chunk_service import ChunkService
 from ..services.embedding_service import EmbeddingService
 from ..services.search_service import SearchService
 from ..services.rag_service import RAGService
+from ..services.repository_service import RepositoryService
 from ..vectorstore.chroma_store import ChromaStore
 from ..embedding.embedding_model import EmbeddingModel
 from ..services.llm_service import LLMService
 from ..llm.llm_model import LLMModel
 from ..core.ocr import OCRService
+from fastapi import Depends
 
 # leading underscore is used to indicate these are private module-level instances:
 
@@ -49,3 +51,8 @@ def get_chroma_store():
 
 def get_ocr_service():
     return _ocr_service
+
+def get_repository_service(
+    store: ChromaStore = Depends(get_chroma_store)
+):
+    return RepositoryService(store)

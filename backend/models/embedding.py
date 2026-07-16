@@ -5,6 +5,9 @@ class ChunkEmbedding(BaseModel):
     chunk : Chunk
     embedding: list[float]
     dimension: int
+    file_name: str
+    document_type: str
+    document_id : str
 
 class EmbeddingResponse(BaseModel):
     total_chunks: int
