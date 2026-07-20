@@ -5,6 +5,7 @@ from backend.models.search import SearchRequest
 from backend.utils.prompt_builder import build_prompt
 from backend.config import MAX_CHUNKS_PER_DOCUMENT
 from collections import defaultdict
+import json,re
 
 class RAGService:
     def __init__(
@@ -39,12 +40,32 @@ class RAGService:
             search_results=balanced_results,
             query=request.query
         )
-        answer = self.llm_service.generate_response(prompt)
+
+        response = self.llm_service.generate_response(prompt)
+
+        try:
+            match = re.search(r"\{.*\}", response, re.DOTALL)
+
+            if not match:
+                raise ValueError("No JSON found.")
+
+            data = json.loads(match.group())
+
+            answer = data["answer"]
+            confidence = max(
+                0,
+                min(100, int(data["confidence"]))
+            )
+
+        except Exception:
+            answer = response
+            confidence = None
 
         if not request.include_sources:
-            return RAGResponse(answer = answer)
+            return RAGResponse(answer = answer,confidence=confidence)
 
-        return RAGResponse(answer = answer,sources = balanced_results)
+        return RAGResponse(answer = answer,confidence=confidence,sources = balanced_results)
+
 
 
 

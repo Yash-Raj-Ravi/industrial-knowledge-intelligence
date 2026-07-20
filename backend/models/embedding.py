@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from backend.models.chunk import Chunk
 
 class ChunkEmbedding(BaseModel):
@@ -6,6 +6,7 @@ class ChunkEmbedding(BaseModel):
     embedding: list[float]
     dimension: int
     file_name: str
+    file_path: str
     document_type: str
     document_id : str
 

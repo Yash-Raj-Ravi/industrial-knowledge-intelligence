@@ -23,12 +23,13 @@ class ChromaStore:
             {
                 "document_id": ce.document_id,
                 "file_name": ce.file_name,
+                "file_path": ce.file_path,
                 "document_type": ce.document_type,
                 "chunk_id": ce.chunk.chunk_id,
                 "start_char": ce.chunk.start_char,
                 "end_char": ce.chunk.end_char,
                 "char_count": ce.chunk.char_count,
-                "word_count": ce.chunk.word_count
+                "word_count": ce.chunk.word_count,
             }
             for ce in chunk_embeddings
         ]
@@ -67,11 +68,9 @@ class ChromaStore:
     def list_documents(self):
         results = self.collection.get(include=["metadatas"])
 
-        for metadata in results["metadatas"][:10]:
-            print(metadata)
-
         grouped_documents = defaultdict(
             lambda: {
+                "document_id": "",
                 "file_name": "",
                 "document_type": "",
                 "total_chunks": 0,
@@ -80,7 +79,7 @@ class ChromaStore:
 
         for metadata in results["metadatas"]:
             document = grouped_documents[metadata["document_id"]]
-
+            document["document_id"] = metadata["document_id"]
             document["file_name"] = metadata["file_name"]
             document["document_type"] = metadata["document_type"]
             document["total_chunks"] += 1
@@ -95,4 +94,20 @@ class ChromaStore:
             "total_chunks": len(results["metadatas"]),
             "documents": documents
         }
+
+    def get_file_path(self, document_id: str) -> str:
+        results = self.collection.get(
+            where={"document_id": document_id},
+            include=["metadatas"]
+        )
+
+        if not results["metadatas"]:
+            raise ValueError("Document not found")
+
+        return results["metadatas"][0]["file_path"]
+
+    def delete_document(self, document_id: str):
+        self.collection.delete(
+            where={"document_id": document_id}
+        )
 

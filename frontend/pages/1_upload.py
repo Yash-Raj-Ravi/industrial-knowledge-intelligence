@@ -2,6 +2,7 @@ from pathlib import Path
 import streamlit as st
 from api import upload_document
 from components.sidebar import render_sidebar
+from PIL import Image
 
 render_sidebar()
 
@@ -19,25 +20,49 @@ uploaded_files = st.file_uploader(
         "csv",
         "pptx",
         "docx",
-        "xlsx"
+        "xlsx",
+        "png",
+        "jpg",
+        "jpeg"
     ],
     accept_multiple_files=True
 )
 
-if uploaded_files:
+camera_image = st.camera_input("📷 Capture a document")
+
+st.caption(
+    "📷 For best OCR results: use good lighting, keep the document flat, "
+    "fill most of the frame, and avoid blur."
+)
+
+uploaded_files = uploaded_files or []
+
+all_files = list(uploaded_files)
+
+if camera_image:
+    all_files.append(camera_image)
+
+if all_files:
     st.markdown("### Selected Documents")
 
-    total_size = sum(file.size for file in uploaded_files) / (1024 * 1024)
+    total_size = sum(file.size for file in all_files) / (1024 * 1024)
 
     st.info(
         f"""
-        **Total Files:** {len(uploaded_files)}
+        **Total Files:** {len(all_files)}
 
         **Total Size:** {total_size:.2f} MB
         """
     )
 
-    for uploaded_file in uploaded_files:
+    for uploaded_file in all_files:
+
+        extension = Path(uploaded_file.name).suffix.lower()
+
+        if extension in [".png", ".jpg", ".jpeg"]:
+            image = Image.open(uploaded_file)
+            st.image(image, caption=uploaded_file.name, width=300)
+
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -62,11 +87,11 @@ if uploaded_files:
 
         with st.spinner("Uploading and indexing documents..."):
 
-            for i, uploaded_file in enumerate(uploaded_files):
+            for i, uploaded_file in enumerate(all_files):
 
                 result = upload_document(uploaded_file)
 
-                progress.progress((i + 1) / len(uploaded_files))
+                progress.progress((i + 1) / len(all_files))
 
                 if result["success"]:
                     success_count += 1

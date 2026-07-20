@@ -7,6 +7,7 @@ from ..services.repository_service import RepositoryService
 from ..vectorstore.chroma_store import ChromaStore
 from ..embedding.embedding_model import EmbeddingModel
 from ..services.llm_service import LLMService
+from ..services.entity_service import EntityService
 from ..llm.llm_model import LLMModel
 from ..core.ocr import OCRService
 from fastapi import Depends
@@ -22,6 +23,7 @@ _search_service = SearchService(
 )
 _llm_model = LLMModel()
 _llm_service = LLMService(_llm_model)
+_entity_service = EntityService(_llm_model)
 
 _ocr_service = OCRService()
 _document_service = DocumentService(_ocr_service)
@@ -56,3 +58,6 @@ def get_repository_service(
     store: ChromaStore = Depends(get_chroma_store)
 ):
     return RepositoryService(store)
+
+def get_entity_service():
+    return _entity_service

@@ -2,7 +2,7 @@
 from asyncio import timeout
 from pathlib import Path
 import requests
-from config import BACKEND_URL, REQUEST_TIMEOUT, UPLOAD_ENDPOINT, EMBED_ENDPOINT, ASK_ENDPOINT
+from config import BACKEND_URL, REQUEST_TIMEOUT, UPLOAD_ENDPOINT, EMBED_ENDPOINT, ASK_ENDPOINT, EXTRACT_ENTITIES_ENDPOINT
 
 
 def get_url(endpoint:str) -> str:
@@ -76,6 +76,8 @@ def upload_document(uploaded_file) -> dict:
             },
             timeout=REQUEST_TIMEOUT
         )
+        # print("Status:", embed_response.status_code)
+        # print("Body:", embed_response.text)
 
         if embed_response.status_code != 200:
             return {
@@ -95,6 +97,33 @@ def upload_document(uploaded_file) -> dict:
         return {
             "success": False,
             "error": "Unable to connect to the backend."
+        }
+def extract_entities(document_id: str) -> dict:
+    try:
+        response = requests.post(
+            get_url(EXTRACT_ENTITIES_ENDPOINT),
+            json={"document_id": document_id},
+            timeout=REQUEST_TIMEOUT
+        )
+
+        if response.status_code != 200:
+            return {
+                "success": False,
+                "error": response.json().get(
+                    "detail",
+                    "Failed to extract entities."
+                )
+            }
+
+        return {
+            "success": True,
+            "data": response.json()
+        }
+
+    except requests.RequestException:
+        return {
+            "success": False,
+            "error": "Unable to connect to backend."
         }
 
 def ask_question(question:str) -> dict:
@@ -169,6 +198,33 @@ def reset_database() -> dict:
                 "error": response.json().get(
                     "detail",
                     "Failed to reset database."
+                )
+            }
+
+        return {
+            "success": True,
+            "data": response.json()
+        }
+
+    except requests.RequestException:
+        return {
+            "success": False,
+            "error": "Unable to connect to backend."
+        }
+
+def delete_document(document_id: str) -> dict:
+    try:
+        response = requests.delete(
+            get_url(f"/documents/{document_id}"),
+            timeout=REQUEST_TIMEOUT
+        )
+
+        if response.status_code != 200:
+            return {
+                "success": False,
+                "error": response.json().get(
+                    "detail",
+                    "Failed to delete document."
                 )
             }
 

@@ -514,3 +514,47 @@ A production-ready Retrieval-Augmented Generation system requires much more than
 ## Next Goal
 
 Extend the Industrial Knowledge Intelligence platform to support OCR directly from image files by implementing dedicated image parsers for PNG, JPG, and JPEG formats, integrate camera capture through Streamlit, and route both uploaded images and captured photos through the existing OCR → Chunking → Embedding → ChromaDB → RAG pipeline, enabling conversational querying over image-based industrial documents.
+
+# Day 13
+
+## Completed
+
+* Implemented on-demand entity extraction for indexed documents through the Repository page.
+* Added dedicated backend endpoint for extracting entities from individual documents using document identifiers.
+* Refactored entity extraction workflow to retrieve document file paths dynamically from ChromaDB metadata.
+* Extended document embedding metadata to include original file paths for repository operations.
+* Implemented individual document deletion functionality using document identifiers.
+* Added backend support for deleting individual documents from ChromaDB without resetting the entire knowledge base.
+* Integrated document deletion into the Repository page with a confirmation dialog to prevent accidental removal.
+* Added document search functionality for filtering indexed documents by filename.
+* Enhanced repository statistics to dynamically update based on filtered search results.
+* Improved repository interface by hiding empty entity categories during entity visualization.
+* Added Markdown chat history export functionality.
+* Implemented reusable chat export utility for generating downloadable conversation transcripts.
+* Added timestamped chat export filenames for improved history management.
+* Refactored retrieved source citation rendering into a reusable helper function.
+* Improved chat interface by displaying retrieved source citations immediately after streamed responses.
+* Performed UI refinements across the Repository and Chat pages to improve overall usability and maintainability.
+
+## Concepts Learned
+
+* Document-level Repository Management
+* ChromaDB Metadata-Based Operations
+* Entity Extraction Workflows
+* Document Deletion in Vector Databases
+* Streamlit Dialog Components (`@st.dialog`)
+* Search and Filtering in Streamlit
+* Dynamic Repository Statistics
+* Markdown File Generation
+* Chat History Export
+* Reusable UI Helper Functions
+* Code Refactoring for Maintainability
+* Streamlit Download Components (`st.download_button`)
+
+## Biggest Learning
+
+Managing a Retrieval-Augmented Generation system extends beyond document retrieval and question answering. Features such as document lifecycle management, on-demand entity extraction, repository search, conversation export, and reusable UI components significantly improve the usability and maintainability of the application. Separating repository operations into dedicated services while reusing frontend components demonstrated how modular design enables new functionality to be added with minimal impact on the existing RAG pipeline.
+
+## Next Goal
+
+Polish the Industrial Knowledge Intelligence platform by improving the overall user interface, enhancing documentation, refining error handling, performing end-to-end testing, and preparing the application for deployment and demonstration as Version 1.0.

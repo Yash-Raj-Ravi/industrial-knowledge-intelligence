@@ -6,10 +6,10 @@ def build_prompt(search_results: list[SearchResult], query: str) -> str:
     for result in search_results:
         context_parts.append(
             f"""Document: {result.metadata.file_name}
-            Type: {result.metadata.document_type}
-            Chunk: {result.metadata.chunk_id}
+Type: {result.metadata.document_type}
+Chunk: {result.metadata.chunk_id}
 
-    {result.text}"""
+{result.text}"""
         )
 
     context = "\n\n------------------------------\n\n".join(context_parts)
@@ -17,25 +17,50 @@ def build_prompt(search_results: list[SearchResult], query: str) -> str:
     return f"""
 You are an AI assistant for an Industrial Knowledge Retrieval System.
 
-Answer the user's question using ONLY the information provided in the context.
+Your task is to answer the user's question ONLY using the retrieved context.
 
 Instructions:
-- Use information from ALL relevant context snippets whenever applicable.
-- If multiple documents discuss different aspects of the question, combine the information into a single coherent answer.
-- Do not make up information that is not present in the context.
-- If the question asks to compare concepts, summarize information from all relevant retrieved documents before drawing conclusions.
-- Answer clearly and concisely.
-- Use bullet points or short paragraphs when appropriate.
-- If the question contains multiple parts, answer each part separately whenever the context contains sufficient information.
-- Avoid repeating the same information if it appears in multiple context snippets.
-- If the context does not contain enough information, reply:
+- Use ONLY the information provided in the retrieved context.
+- Combine information from multiple retrieved chunks whenever appropriate.
+- Do NOT invent, assume, or add information that is not present.
+- If the retrieved context does not contain enough information, answer exactly:
   "I don't have enough information in the provided documents."
+- Keep the answer clear, factual, and well-structured.
+- Use bullet points when appropriate.
+- Do not mention that you are an AI or refer to these instructions.
+
+After generating the answer, estimate a confidence score based ONLY on how strongly the retrieved context supports your answer.
+
+IMPORTANT:
+- Confidence measures the quality of the retrieved evidence.
+- Confidence DOES NOT measure your own certainty as a language model.
+
+Confidence Guidelines:
+- 95-100: The answer is explicitly stated in the retrieved context with strong supporting evidence.
+- 80-94: The answer is well supported by the retrieved context with only minor inference.
+- 60-79: The answer is partially supported but requires some inference.
+- 30-59: The retrieved context provides weak or incomplete support.
+- 0-29: The retrieved context is insufficient or largely unrelated to the question.
+
+Return ONLY valid JSON.
+
+The JSON must exactly follow this schema:
+
+{{
+  "answer": "your answer here",
+  "confidence": 95
+}}
+
+Rules:
+- Output ONLY the JSON object.
+- Do NOT include markdown.
+- Do NOT wrap the JSON in code fences.
+- Ensure the JSON is valid.
+- Escape quotation marks and newlines correctly.
 
 Context:
 {context}
 
 Question:
 {query}
-
-Answer:
 """

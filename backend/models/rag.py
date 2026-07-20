@@ -8,4 +8,6 @@ class RAGRequest(BaseModel):
 
 class RAGResponse(BaseModel):
     answer:str
+    confidence: float | None = None
     sources:list[SearchResult] | None = None
+

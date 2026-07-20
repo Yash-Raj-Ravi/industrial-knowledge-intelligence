@@ -10,3 +10,9 @@ class RepositoryService:
         data = self.store.list_documents()
 
         return RepositoryResponse(**data)
+
+    def get_file_path(self, document_id: str) -> str:
+        return self.store.get_file_path(document_id)
+
+    def delete_document(self, document_id: str):
+        self.store.delete_document(document_id)

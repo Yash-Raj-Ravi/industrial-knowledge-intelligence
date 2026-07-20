@@ -16,6 +16,7 @@ def render_sidebar():
 
         st.divider()
 
+
         if check_backend():
             st.success("🟢 Backend Online")
         else:

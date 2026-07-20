@@ -8,3 +8,5 @@ UPLOAD_ENDPOINT = "/upload"
 EMBED_ENDPOINT = "/embed"
 
 ASK_ENDPOINT = "/ask"
+
+EXTRACT_ENTITIES_ENDPOINT = "/extract-entities"

@@ -437,3 +437,54 @@ All notable changes to this project will be documented in this file.
 * Frontend architecture now includes reusable components that improve maintainability and provide a consistent user experience across application pages.
 * The Industrial Knowledge Intelligence platform now delivers a polished end-to-end Retrieval-Augmented Generation (RAG) workflow from document ingestion through semantic retrieval and conversational question answering.
 * The remaining major enhancement is extending OCR support to image formats (PNG, JPG, JPEG) and camera capture, enabling knowledge extraction directly from photographed industrial documents.
+
+# Day 13
+
+## Added
+
+* Implemented on-demand entity extraction for indexed documents directly from the Repository page.
+* Added dedicated backend endpoint for extracting entities using document identifiers.
+* Added document file path metadata to ChromaDB embeddings to support repository operations.
+* Implemented individual document deletion functionality for indexed documents.
+* Added backend endpoint to delete documents from ChromaDB using document identifiers.
+* Added document deletion confirmation dialog using Streamlit's `@st.dialog`.
+* Added repository search functionality for filtering indexed documents by filename.
+* Added Markdown chat history export functionality.
+* Implemented reusable chat export utility for generating downloadable conversation transcripts.
+* Added timestamped filenames for exported chat history.
+
+## Changed
+
+* Refactored entity extraction workflow to resolve document file paths dynamically from ChromaDB metadata instead of exposing file paths to the frontend.
+* Improved repository architecture by using document identifiers for all document management operations.
+* Enhanced repository statistics to dynamically reflect filtered search results.
+* Improved repository entity visualization by hiding empty entity categories.
+* Refactored retrieved source citation rendering into a reusable helper function.
+* Enhanced chat interface by displaying retrieved source citations immediately after streamed responses.
+* Improved repository usability through document search and streamlined document management.
+* Performed UI refinements across Repository and Chat pages to improve consistency and maintainability.
+
+## Tested
+
+* Successfully validated on-demand entity extraction for indexed documents.
+* Verified extracted entities are correctly grouped by category.
+* Confirmed document deletion removes only the selected document while preserving the remaining knowledge base.
+* Successfully tested repository search with dynamic filtering by filename.
+* Verified repository statistics update correctly during document searches.
+* Confirmed Markdown chat export generates complete conversation history with timestamped filenames.
+* Verified streamed AI responses continue to display retrieved source citations correctly after refactoring.
+* Successfully validated complete repository management workflow:
+  * Search indexed documents
+  * Extract document entities
+  * Delete individual documents
+  * Export chat history
+  * Continue Retrieval-Augmented Generation using remaining indexed documents
+
+## Project Status
+
+* The Industrial Knowledge Intelligence platform now provides complete document lifecycle management, including indexing, semantic retrieval, entity extraction, repository search, individual document deletion, and knowledge base reset.
+* Repository functionality has been significantly enhanced through searchable document management and on-demand entity extraction.
+* Chat functionality now supports exporting complete conversation history as reusable Markdown documents.
+* Frontend codebase has been refactored with reusable helper functions, improving maintainability and reducing duplication.
+* The platform now delivers a polished end-to-end Retrieval-Augmented Generation (RAG) experience with modern document management capabilities suitable for demonstration and deployment.
+* Version 1.0 of the Industrial Knowledge Intelligence platform is now functionally complete, with future work focused primarily on UI polish, deployment, and additional enhancements rather than core functionality.

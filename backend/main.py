@@ -5,14 +5,20 @@ from .services.chunk_service import ChunkService
 from .services.document_service import DocumentService
 from .services.embedding_service import EmbeddingService
 from .services.search_service import SearchService
+from .services.repository_service import RepositoryService
+from .services.entity_service import EntityService
 from .vectorstore.chroma_store import ChromaStore
 from .models.rag import RAGResponse, RAGRequest
+from .models.repository import DeleteDocumentResponse
 from .models.search import SearchResponse, SearchRequest
 from .config import ALLOWED_TYPES, UPLOAD_DIR
 from pydantic import BaseModel
 from .models.embedding import EmbedResponse, ResetResponse
 from .services.rag_service import RAGService
 from fastapi import Depends
+from fastapi import Depends, HTTPException
+from backend.models.entities import EntityRequest, EntityResponse
+
 # Services
 from .core.dependencies import (
     get_document_service,
@@ -20,6 +26,7 @@ from .core.dependencies import (
     get_embedding_service,
     get_chroma_store,
     get_search_service,
+    get_entity_service,
     get_rag_service,
     get_repository_service
 )
@@ -30,7 +37,7 @@ from .services.repository_service import RepositoryService
 app = FastAPI(
     title="Industrial Knowledge Intelligence API",
     description="Backend API for Industrial Knowledge Intelligence Platform",
-    version="0.8.0"
+    version="1.0"
     )
 
 
@@ -104,8 +111,13 @@ def embed_endpoint(request: FilePathRequest,
         document_id = str(uuid.uuid4())
         file_name = os.path.basename(request.file_path)
         chunks = chunk_service.chunk_document(request.file_path)
-        embeddings = embedding_service.generate_chunk_embeddings(chunks,file_name=file_name,document_id = document_id)
 
+        embeddings = embedding_service.generate_chunk_embeddings(
+            chunks,
+            file_name=file_name,
+            file_path=request.file_path,
+            document_id=document_id
+        )
 
         store.add_embeddings(embeddings.embeddings)
 
@@ -115,13 +127,37 @@ def embed_endpoint(request: FilePathRequest,
         embedding_dimension=embeddings.embedding_dimension
     )
 
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import traceback
 
+        traceback.print_exc()
+
+        raise
+
+@app.post("/extract-entities", response_model=EntityResponse)
+def extract_entities_endpoint(
+    request: EntityRequest,
+    repository_service: RepositoryService = Depends(get_repository_service),
+    document_service=Depends(get_document_service),
+    entity_service=Depends(get_entity_service)
+):
+    try:
+        file_path = repository_service.get_file_path(request.document_id)
+
+        document_text = document_service.parse_document(file_path)
+
+        entities = entity_service.extract_entities(document_text)
+
+        return EntityResponse(
+            message="Entities extracted successfully.",
+            entities=entities
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to extract entities: {str(e)}"
+        )
 @app.post("/search", response_model = SearchResponse)
 def search_endpoint(request: SearchRequest,
                     search_service: SearchService = Depends(get_search_service)):
@@ -173,4 +209,24 @@ def reset_database_endpoint(store: ChromaStore = Depends(get_chroma_store)):
             detail=str(e)
         )
 
+@app.delete(
+    "/documents/{document_id}",
+    response_model=DeleteDocumentResponse
+)
+def delete_document_endpoint(
+    document_id: str,
+    repository_service: RepositoryService = Depends(get_repository_service)
+):
+    try:
+        repository_service.delete_document(document_id)
+
+        return DeleteDocumentResponse(
+            message="Document deleted successfully."
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 

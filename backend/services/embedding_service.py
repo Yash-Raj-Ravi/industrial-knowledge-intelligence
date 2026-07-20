@@ -7,9 +7,9 @@ class EmbeddingService:
      def __init__(self, embedding_model: EmbeddingModel):
          self.embedding_model = embedding_model
 
-     def generate_chunk_embeddings(self,chunks:list[Chunk],file_name:str,document_id:str) -> EmbeddingResponse:
+     def generate_chunk_embeddings(self,chunks:list[Chunk],file_name:str,file_path: str,document_id:str) -> EmbeddingResponse:
          if not chunks:
-             raise ValueError("cannot generate embeddings for empty list of chunks")
+             raise ValueError("No readable text detected. Please upload a clearer image or document.")
          texts = [chunk.text for chunk in chunks]
 
          embeddings = self.embedding_model.embed_texts(texts)
@@ -23,6 +23,7 @@ class EmbeddingService:
                  embedding = embedding,
                  dimension = embedding_dimension,
                  file_name=file_name,
+                 file_path=file_path,
                  document_type = document_type,
                  document_id = document_id
 

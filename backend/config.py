@@ -39,3 +39,10 @@ LLM_MODEL = "llama3.1:8b"
 TESSERACT_PATH = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
 
 MAX_CHUNKS_PER_DOCUMENT = 3
+
+OCR_SUPPORTED_EXTENSIONS = {
+    ".pdf",
+    ".png",
+    ".jpg",
+    ".jpeg",
+}

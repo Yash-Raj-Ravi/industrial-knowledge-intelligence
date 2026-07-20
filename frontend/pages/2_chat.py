@@ -3,15 +3,42 @@ from api import ask_question, get_documents
 from components.sidebar import render_sidebar
 from pathlib import Path
 import time
+from datetime import datetime
+from utils.chat_export import generate_chat_markdown
 
 render_sidebar()
 
-st.title("💬 Chat with Knowledge Base")
+
+if "messages" not in st.session_state:
+    # checks if the st.session_state dictionary contains any key "messages"
+    # if not then initialize it for new chats else if it is been initialized
+    # and chat is going on then skip it.
+
+    st.session_state.messages = []
+
+col1, col2 = st.columns([5,1])
+
+with col1:
+    st.title("💬 Chat with Knowledge Base")
+
+with col2:
+    if st.session_state.messages:
+        markdown = generate_chat_markdown(
+            st.session_state.messages
+        )
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+
+        st.download_button(
+            "📥 Export",
+            markdown,
+            file_name=f"chat_history_{timestamp}.md",
+            mime="text/markdown"
+        )
 
 st.caption(
     "Ask questions about your indexed industrial documents using Retrieval-Augmented Generation (RAG)."
 )
-
 
 def clean_name(file_name: str) -> str:
     """
@@ -86,6 +113,59 @@ def stream_text(text: str):
         yield word + " "
         time.sleep(0.03)
 
+def display_sources(sources):
+    """
+    Displays retrieved source citations grouped by document.
+    """
+
+    if not sources:
+        return
+
+    st.markdown("#### 📚 Retrieved Sources")
+
+    grouped_sources = {}
+
+    # Group sources by file name
+    for source in sources:
+        file_name = source["metadata"]["file_name"]
+
+        if file_name not in grouped_sources:
+            grouped_sources[file_name] = []
+
+        grouped_sources[file_name].append(source)
+
+    # Sort chunks within each document
+    for document_sources in grouped_sources.values():
+        document_sources.sort(
+            key=lambda source: source["distance"]
+        )
+
+    # Sort documents by best matching chunk
+    sorted_documents = sorted(
+        grouped_sources.items(),
+        key=lambda item: min(
+            source["distance"] for source in item[1]
+        )
+    )
+
+    # Display grouped citations
+    for file_name, document_sources in sorted_documents:
+
+        st.markdown(
+            f"##### 📄 {file_name} &nbsp;&nbsp; ⭐ Best Matching Chunk"
+        )
+
+        for source in document_sources:
+            metadata = source["metadata"]
+
+            with st.expander(
+                f"Chunk {metadata['chunk_id']}"
+            ):
+                st.caption(
+                    f"Chunk {metadata['chunk_id']}"
+                )
+                st.write(source["text"])
+
 repository = get_documents()
 
 has_documents = (
@@ -99,13 +179,6 @@ if has_documents:
     suggestions = generate_suggestions(
         repository["data"]["documents"]
     )
-
-if "messages" not in st.session_state:
-    # checks if the st.session_state dictionary contains any key "messages"
-    # if not then initialize it for new chats else if it is been initialized
-    # and chat is going on then skip it.
-
-    st.session_state.messages = []
 
 question = None
 
@@ -151,51 +224,25 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
         if message["role"] == "assistant":
-            sources = message.get("sources",[])
+            confidence = message.get("confidence")
 
-            if sources:
-                st.markdown("#### 📚 Retrieved Sources")
-
-                grouped_sources = {}
-
-                # Group sources by file name
-                for source in sources:
-                    file_name = source["metadata"]["file_name"]
-
-                    if file_name not in grouped_sources:
-                        grouped_sources[file_name] = []
-
-                    grouped_sources[file_name].append(source)
-
-                for document_sources in grouped_sources.values():
-                    document_sources.sort(key=lambda source: source["distance"])
-
-                sorted_documents = sorted(
-                    grouped_sources.items(),
-                    key=lambda item: min(source["distance"] for source in item[1])
-                )
-
-                # Display grouped citations
-                for file_name, document_sources in sorted_documents:
-
-                    best_relevance = (1 - document_sources[0]["distance"]) * 100
-
-                    st.markdown(
-                        f"##### 📄 {file_name} &nbsp;&nbsp; ⭐ Best Retrieved Chunk: {best_relevance:.1f}%"
+            if confidence is not None:
+                if confidence >= 85:
+                    st.success(
+                        f"🟢 Answer Confidence: {confidence:.1f}%"
+                    )
+                elif confidence >= 60:
+                    st.warning(
+                        f"🟡 Answer Confidence: {confidence:.1f}%"
+                    )
+                else:
+                    st.error(
+                        f"🔴 Answer Confidence: {confidence:.1f}%"
                     )
 
-                    for source in document_sources:
-                        metadata = source["metadata"]
-
-                        with st.expander(
-                                f"Chunk {metadata['chunk_id']}"
-                        ):
-                            relevance = (1 - source["distance"]) * 100
-
-                            st.caption(f"Relevance Score: {relevance:.1f}%")
-
-                            st.write(source["text"])
-
+            display_sources(
+                message.get("sources", [])
+            )
 
 
 typed_question = st.chat_input(
@@ -227,9 +274,31 @@ if question:
                 stream_text(response["answer"])
             )
 
+            confidence = response.get("confidence")
+
+            display_sources(
+                response.get("sources", [])
+            )
+
+
+
+            if confidence is not None:
+                if confidence >= 85:
+                    st.success(
+                        f"🟢 Knowledge Retrieval Confidence: {confidence:.1f}%"
+                    )
+                elif confidence >= 60:
+                    st.warning(
+                        f"🟡 Knowledge Retrieval Confidence: {confidence:.1f}%"
+                    )
+                else:
+                    st.error(
+                        f"🔴 Knowledge Retrieval Confidence: {confidence:.1f}%"
+                    )
         st.session_state.messages.append(
             {"role": "assistant",
              "content": streamed_answer,
+             "confidence": response.get("confidence"),
              "sources": response.get("sources", [])
              }
         )
