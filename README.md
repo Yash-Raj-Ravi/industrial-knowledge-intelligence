@@ -75,49 +75,49 @@ This project aims to build an intelligent AI platform that indexes industrial do
 - 
 ### AI Processing Pipeline
 
-✔ Document chunking using a sliding window approach
+- ✔ Document chunking using a sliding window approach
 
-✔ Local embedding generation using Ollama (`mxbai-embed-large`)
+- ✔ Local embedding generation using Ollama (`mxbai-embed-large`)
 
-✔ Batch embedding generation
+- ✔ Batch embedding generation
 
-✔ Persistent vector storage with ChromaDB
+- ✔ Persistent vector storage with ChromaDB
 
-✔ Metadata-preserving document indexing
+- ✔ Metadata-preserving document indexing
 
-✔ Semantic similarity search
+- ✔ Semantic similarity search
 
 ### Retrieval-Augmented Generation
 
-✔ Conversational chat
-✔ Context retrieval
-✔ Local LLM inference
-✔ Context-aware answers
-✔ Retrieval confidence score
-✔ Source citations
-✔ Document grouping
-✔ Relevance scoring
+-✔ Conversational chat
+-✔ Context retrieval
+-✔ Local LLM inference
+-✔ Context-aware answers
+-✔ Retrieval confidence score
+-✔ Source citations
+-✔ Document grouping
+-✔ Relevance scoring
 
 ### Search Features
 
-✔ Semantic similarity search
-✔ Cross-document retrieval
-✔ Multi-document indexing
-✔ Best matching chunks
-✔ Grouped document citations
+- ✔ Semantic similarity search
+- ✔ Cross-document retrieval
+- ✔ Multi-document indexing
+- ✔ Best matching chunks
+- ✔ Grouped document citations
 
 ### Frontend
 
-✔ Streamlit UI
-✔ Sidebar navigation
-✔ Upload page
-✔ Chat page
-✔ Chat history
-✔ Suggested questions
-✔ Confidence indicator
-✔ Repository explorer
-✔ Source visualization
-✔ Document statistics
+- ✔ Streamlit UI
+- ✔ Sidebar navigation
+- ✔ Upload page
+- ✔ Chat page
+- ✔ Chat history
+- ✔ Suggested questions
+- ✔ Confidence indicator
+- ✔ Repository explorer
+- ✔ Source visualization
+- ✔ Document statistics
 ---
 
 ## Tech Stack
