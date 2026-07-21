@@ -306,31 +306,43 @@ The platform exposes RESTful APIs for document ingestion, semantic indexing, ent
 ## Project Architecture
 
 ```text
-                User
+             
+                          User
+                           │
+                           ▼
+                  Streamlit Frontend
+                  ├──────────────────┐
+                  ▼                  ▼
+         Upload Documents       Ask Question
+                  │                  │
+                  ▼                  ▼
+          Document Parsing    Query Embedding
+                  │                  │
+        ┌─────────┴─────────┐        │
+        ▼                   ▼        ▼
+   Native Parsing      OCR (if needed)
                   │
                   ▼
-      Streamlit Frontend
-      ├──────────────┐
-      ▼              ▼
- Upload Documents   Chat Query
-      │              │
-      ▼              ▼
- Document Parsing    Query Embedding
-      │              │
-      ▼              ▼
- OCR (if needed)     ChromaDB Search
-      │              │
-      ▼              ▼
- Text Chunking   Retrieved Context
-      │              │
-      ▼              ▼
- Embeddings      Ollama LLM
-      │              │
-      ▼              ▼
- ChromaDB      Generated Answer
-                     │
-                     ▼
-        Confidence + Citations
+             Text Chunking
+                  │
+                  ▼
+      Batch Embedding Generation
+                  │
+                  ▼
+           ChromaDB Vector Store
+            │                 │
+            │                 ▼
+            │          Semantic Search
+            │                 │
+            ▼                 ▼
+     Entity Extraction   Retrieved Context
+            │                 │
+            ▼                 ▼
+   Structured Entities    Ollama LLM
+            │                 │
+            └──────────┬──────┘
+                       ▼
+      Confidence + Source Citations
 ```
 
 ---
