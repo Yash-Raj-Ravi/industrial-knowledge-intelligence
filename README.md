@@ -72,7 +72,7 @@ This project aims to build an intelligent AI platform that indexes industrial do
 - ✔ Automatic OCR fallback
 - ✔ Mixed PDF support
 - ✔ Metadata extraction
-- 
+ 
 ### AI Processing Pipeline
 
 - ✔ Document chunking using a sliding window approach
@@ -89,14 +89,14 @@ This project aims to build an intelligent AI platform that indexes industrial do
 
 ### Retrieval-Augmented Generation
 
--✔ Conversational chat
--✔ Context retrieval
--✔ Local LLM inference
--✔ Context-aware answers
--✔ Retrieval confidence score
--✔ Source citations
--✔ Document grouping
--✔ Relevance scoring
+- ✔ Conversational chat
+- ✔ Context retrieval
+- ✔ Local LLM inference
+- ✔ Context-aware answers
+- ✔ Retrieval confidence score
+- ✔ Source citations
+- ✔ Document grouping
+- ✔ Relevance scoring
 
 ### Search Features
 
