@@ -395,22 +395,22 @@ industrial-knowledge-intelligence/
 
 ### Completed
 
-✔ FastAPI backend
-✔ Streamlit frontend
-✔ Multi-format upload
-✔ Multi-document upload
-✔ OCR support
-✔ Camera capture
-✔ Multi-format parsing
-✔ Chunking
-✔ Local embeddings
-✔ ChromaDB
-✔ Semantic search
-✔ RAG pipeline
-✔ Conversational AI
-✔ Confidence scoring
-✔ Source citations
-✔ Suggested questions
+- ✔ FastAPI backend
+- ✔ Streamlit frontend
+- ✔ Multi-format upload
+- ✔ Multi-document upload
+- ✔ OCR support
+- ✔ Camera capture
+- ✔ Multi-format parsing
+- ✔ Chunking
+- ✔ Local embeddings
+- ✔ ChromaDB
+- ✔ Semantic search
+- ✔ RAG pipeline
+- ✔ Conversational AI
+- ✔ Confidence scoring
+- ✔ Source citations
+- ✔ Suggested questions
 
 ---
 
