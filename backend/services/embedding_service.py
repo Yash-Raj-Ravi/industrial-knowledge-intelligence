@@ -1,5 +1,6 @@
 from backend.embedding.embedding_model import EmbeddingModel
 from backend.models.chunk import Chunk
+from backend.config import EMBEDDING_BATCH_SIZE
 from backend.models.embedding import ChunkEmbedding,EmbeddingResponse
 import os
 
@@ -10,9 +11,23 @@ class EmbeddingService:
      def generate_chunk_embeddings(self,chunks:list[Chunk],file_name:str,file_path: str,document_id:str) -> EmbeddingResponse:
          if not chunks:
              raise ValueError("No readable text detected. Please upload a clearer image or document.")
-         texts = [chunk.text for chunk in chunks]
 
-         embeddings = self.embedding_model.embed_texts(texts)
+         if len(chunks) > 5000:
+             raise ValueError(
+                 "Document is too large to process in a single indexing operation."
+             )
+
+         texts = [chunk.text for chunk in chunks]
+         BATCH_SIZE = EMBEDDING_BATCH_SIZE
+
+         all_embeddings = []
+
+         for i in range(0, len(texts), BATCH_SIZE):
+             batch = texts[i:i + BATCH_SIZE]
+             batch_embeddings = self.embedding_model.embed_texts(batch)
+             all_embeddings.extend(batch_embeddings)
+
+         embeddings = all_embeddings
          document_type = os.path.splitext(file_name)[1].lower()
          chunk_embeddings = []
          embedding_dimension = len(embeddings[0])

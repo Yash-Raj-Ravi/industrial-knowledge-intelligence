@@ -46,3 +46,5 @@ OCR_SUPPORTED_EXTENSIONS = {
     ".jpg",
     ".jpeg",
 }
+
+EMBEDDING_BATCH_SIZE = 16
